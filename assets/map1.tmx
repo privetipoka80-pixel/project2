@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="80" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="1">
+ <tileset firstgid="1" source="Tileset.tsx"/>
+ <tileset firstgid="210" source="Animated_objects.tsx"/>
+ <tileset firstgid="703" source="Objects_small_details.tsx"/>
+ <tileset firstgid="1207" source="Objects.tsx"/>
+ <layer id="10" name="floor" width="80" height="80">
+  <data encoding="base64" compression="zstd">
+   KLUv/WAAY0UJACLECxKwJelcKGCYUvmUIjVwTScFTAHlJBkjxZhgJkKiVa60GfgBGn6h3UyzUo76+88Ba6gg2zIHcAIzM1FuOhIAEbR4BDVPUIKEygiJERJBET4RbujOASGEQMQdQAXEENYpzqPQU36RC7AaSLFz4jdqQCiQIR8uz0ABh5M+w+9AZe8zjFFT5JBXA/k32TMQrTk4yjWoo/0ekjVGCJphjdOBfuvAiHETw5AUvjIzH5HeWAUgvIor+4xsQxUxUOnY7DFyYyIhH2/qzs3NZhcOcM4PBdrdcZ3MHzDK4I5cs/wNc+IKQCwptb3kC24YQncAvP5+ZDOm0v6PsSzg0+3cF6+AyRazUUUn3B/Qf33DWuI87aJADNW9auGxPu0XU8CrAQrQmWwJRAbb
+  </data>
+ </layer>
+ <layer id="1" name="walls" width="80" height="80">
+  <data encoding="base64" compression="zstd">
+   KLUv/WAAY7UFAGQDFQAAABYAAAAXAAAAGBkAAAA2KAAsOwAoPztSUlJhAAAAYgAAAGMZFWJkAAAAZU5OTlIsUmVhMKAQW2WaA/ACm5GCpsUVoBqjheoBlNxOPLxhwR5AaRlU+FClZxireajyVCFSianGjUGdm6fUvAetNhKAKiAJWKOotjtOfUhRIyKfiF47Vx4HVjYWAHWfVd6l2nsgquYNqgKoCiQAVFGkAUNXy8Gp+6EYQcLjSfgndZTOD2sK
+  </data>
+ </layer>
+ <layer id="4" name="doors" width="80" height="80">
+  <data encoding="base64" compression="zstd">
+   KLUv/WAAY2UBAJAA7wAAACoBAAArAQDwAAAA8QAGAGUGeuiVYTk9mBXQNVSHBTIFeqcWescG
+  </data>
+ </layer>
+ <layer id="6" name="details" width="80" height="80">
+  <data encoding="base64" compression="zstd">
+   KLUv/WAAYxUHAKIHGCGQzbAGjBTwgHuObWyT7BJ5sLuze/8z2cXQfRFRNVtpoaWGsI9dIE9n01h8kMTnOHyMC2zXw/AVjPOdaCsd4RtYylSkbWSmUEuxJVgNOFm+ykf5NF+mod7kk3yRD/NdPi+g0TUkgdY+a/CCkUCi4xYDpTKA9pIPHmV8yjzbr3dq3zO2ZjWgE4bQf9ytMBQmELa2qniM54ZriEqeYDTC5uivKzLiGGLV3jDgGKqKERCGKAwH44StQRhSQWCuFvbiP8WSPg/LxiFrTJGrJzbMGqooQj3RCFT5QxrVoFoecRU=
+  </data>
+ </layer>
+ <layer id="5" name="torches" width="80" height="80">
+  <data encoding="base64" compression="zstd">
+   KLUv/WAAY+0AABgAAQQGgFDvZUDVfwZQ5fXFoJ1emYG+FyXKoHc/
+  </data>
+ </layer>
+</map>
