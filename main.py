@@ -16,6 +16,66 @@ START_PLAYER_X = 2
 START_PLAYER_y = 5
 
 
+class StartView(arcade.View):
+    def __init__(self):
+        super().__init__()
+
+    def on_show(self):
+        color = arcade.color.BLACK
+
+    def on_draw(self):
+        self.clear()
+
+        arcade.draw_lrbt_rectangle_filled(SCREEN_WIDTH // 2 - 100, SCREEN_WIDTH // 2 + 100,
+                                          SCREEN_HEIGHT // 2 - 30, SCREEN_HEIGHT // 2 + 30,
+                                          arcade.color.WHITE)
+        arcade.draw_lrbt_rectangle_filled(SCREEN_WIDTH // 2 - 100, SCREEN_WIDTH // 2 + 100,
+                                          SCREEN_HEIGHT // 2 - 130, SCREEN_HEIGHT // 2 - 70,
+                                          arcade.color.WHITE)
+
+        arcade.draw_text("The Conqueror of Dungeons",
+                         SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100,
+                         arcade.color.WHITE, font_size=50,
+                         anchor_x="center", anchor_y="center")
+
+        arcade.draw_text("СТАРТ",
+                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                         arcade.color.BLACK, font_size=30,
+                         anchor_x="center", anchor_y="center")
+
+        arcade.draw_text("ВЫХОД",
+                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100,
+                         arcade.color.BLACK, font_size=30,
+                         anchor_x="center", anchor_y="center")
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        start_left = SCREEN_WIDTH // 2 - 100
+        start_right = SCREEN_WIDTH // 2 + 100
+        start_bottom = SCREEN_HEIGHT // 2 - 30
+        start_top = SCREEN_HEIGHT // 2 + 30
+
+        exit_left = SCREEN_WIDTH // 2 - 100
+        exit_right = SCREEN_WIDTH // 2 + 100
+        exit_bottom = SCREEN_HEIGHT // 2 - 130
+        exit_top = SCREEN_HEIGHT // 2 - 70
+
+        if start_left <= x <= start_right and start_bottom <= y <= start_top:
+            game_view = MyGame()
+            game_view.setup()
+            self.window.show_view(game_view)
+
+        elif exit_left <= x <= exit_right and exit_bottom <= y <= exit_top:
+            arcade.close_window()
+
+    def on_key_press(self, key, modifiers):
+        if key == arcade.key.ENTER or key == arcade.key.SPACE:
+            game_view = MyGame()
+            game_view.setup()
+            self.window.show_view(game_view)
+        elif key == arcade.key.ESCAPE:
+            arcade.close_window()
+
+
 class MyGame(arcade.Window):
     def __init__(self):
 
