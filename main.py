@@ -1,19 +1,19 @@
 import arcade
 from arcade.camera import Camera2D
 from arcade.types import Color
-
-
+# pip install pytiled-parser[zstd]
+from player import Player
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
 SCREEN_TITLE = "The Conqueror of Dungeons"
 TILE_SCALING = 3
-SPEED = 5
+SPEED = 3
 SCALE = 0.5
 CAMERA_LERP = 0.1
 
-
-START_PLAYER_X = 2
-START_PLAYER_y = 5
+# map1(11.5, 108)
+START_PLAYER_X = 11.5
+START_PLAYER_y = 108
 
 
 class MyGame(arcade.Window):
@@ -29,8 +29,7 @@ class MyGame(arcade.Window):
 
     def setup(self):
 
-        self.don = (':resources:images/enemies/slimePurple.png')
-        self.player = arcade.Sprite(self.don, SCALE)
+        self.player = Player()
         x2 = START_PLAYER_X * self.cell_size + self.cell_size // 2
         y2 = START_PLAYER_y * self.cell_size + self.cell_size // 2
 
@@ -44,6 +43,7 @@ class MyGame(arcade.Window):
 
         self.wall_list = self.tile_map.sprite_lists["walls"]
         self.torches_list = self.tile_map.sprite_lists["torches"]
+        self.details_list = self.tile_map.sprite_lists["details"]
 
         self.torch_frames = []
         for i in range(1, 9):
@@ -64,6 +64,10 @@ class MyGame(arcade.Window):
             self.player, self.wall_list
         )
 
+        self.physics_engine2 = arcade.PhysicsEngineSimple(
+            self.player, self.details_list
+        )
+
     def on_draw(self):
         """Отрисовка кадра"""
         self.clear()
@@ -73,7 +77,10 @@ class MyGame(arcade.Window):
         self.torches.draw(pixelated=True)
 
         self.physics_engine.update()
+        self.physics_engine2.update()
         self.world_camera.use()
+
+
 
     def on_update(self, delta_time):
         """Обновление логики игры"""
@@ -82,6 +89,8 @@ class MyGame(arcade.Window):
             (self.player.position),
             CAMERA_LERP,
         )
+
+        self.player.update_animation(delta_time)
         self.animation_timer += delta_time
 
         if self.animation_timer >= self.animation_speed:
@@ -103,6 +112,7 @@ class MyGame(arcade.Window):
             self.player.change_x = -SPEED
 
     def on_key_release(self, key, modifiers):
+        # print(self.player.position)
         if key == arcade.key.W:
             self.player.change_y = 0
         if key == arcade.key.S:

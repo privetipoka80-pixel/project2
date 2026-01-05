@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="80" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="1">
+ <tileset firstgid="1" source="Tileset.tsx"/>
+ <tileset firstgid="210" source="Animated_objects.tsx"/>
+ <tileset firstgid="703" source="Objects_small_details.tsx"/>
+ <tileset firstgid="1207" source="Objects.tsx"/>
+ <group id="12" name="Группа 1">
+  <layer id="1" name="walls" width="80" height="80">
+   <data encoding="base64" compression="zstd">
+   KLUv/WAAYzUJAHQDADYVAAAAFgAAABcAAAAYGSgsOzsoPztSAAAAAFJSYQAAAGIAAABjYxViZAAAAGVOTk5SLFIWYXiocDlNczADkiRJ0gESoBAkCCwYQcMQOAQeQYMQbBIwBAjEIKYx7joHGRAspems2Gdz32afxf2WfRb32eyrIGuwwnZjLe1+qn1r++r3Le6z2G8BPQZQEq2W+SjZ/TstY8OHX88wgjw3nixEI0ZwMbiNp4ixB3XA7RWvf7KGXa1DbGtX9VskfnWVWuNOrtZ7XDu8poLD85uVeENhJxZ5zfQpstuNIsggt/cZnI4/AQDdRyg9ncB7BiIob1AheytqAMjqHtbUI8CdXUP+oU7oOuKXag/vqzqnYpw4u9iVih72CzAicEDTLF/hKiJjOg==
+  </data>
+  </layer>
+  <layer id="10" name="floor" width="80" height="80">
+   <data encoding="base64" compression="zstd">
+   KLUv/WAAY70MAKLEDBOwJeksFC8UJcmpfEqRGrimkwKm5SQZI8UYYSYREo1TdKXxgeAPTIB/KNXNNCvlqL//HIClqFDZMgeggpKRICfpEsAQpFCCliSIGIIIIUgYgobAIXgE4RiUMeJ1DiVMoK8MoNT0GTQ1cqmboHA5H5gcBzanAsvxwMl5YHMscDkfSA4DN+cCq/HCTO3v5IUYsu7Lv6EATx8XlwX0NSA26vYWioOYAOXwwQTPQDQOePcZ3gcqoT7D+DUzPlStKbwv2Z6BiDUgj3xqoProZA6g84sdI84XfRQOVZg1IbvWeCP9uhk4/BP94ZG8/hrlM9hlLQgcVhKzD25a4yu1a4kFDshSf5Bsyr1NF3sZXw8czkn0nGs20IGcVuBwo4uV+Te+lRvd0QaoxcEzhurR+ZoyQJnMWyAeM8A5DpvAwvE6rhRXTSFwsBw/7xG/I929rzXChAOHnyy/Ksev9OadODqBQ2rCeq1meruNcvXAAXiX71fPWEcmvjcBmA4cRoDfIJ8NHNflcVIWBw6+pPvAWg1fsH/xUnkk
+  </data>
+  </layer>
+  <layer id="5" name="torches" width="80" height="80">
+   <data encoding="base64" compression="zstd">
+   KLUv/WAAY7UEAHJEDRjAaw7/D9zTLjb+V7eRPdzjbi6wRbi0OwWnAEgwbWkXHk+g5xh7XiDG392lO4/ONmup4erKJaCRYZhqtX4GoIJTttQcaTNo9fqJX18MRr01EP2iQUv9TO1tgZpbyXP4gr07E5bbu8k15J2lHeSdfUTDLXIjzLyhm+fUL+sut5DdRPbNdAcF8sRn1+6Z6WbTAP95AQ==
+  </data>
+  </layer>
+  <layer id="6" name="details" width="80" height="80">
+   <data encoding="base64" compression="zstd">
+   KLUv/WAAYx0HAHKHFyCQzXKMFPCAe45tbJPsEnmwu7N7/zPZxdB9EVE122ShpUPsswvk6WwaCx2S0B0HnXFAdz0MemEcfZGuNEEfLDUVSTeaKaSlUEuwUsDJold0iq7RMw7lE12iR3SMfjEwoME5JIHWPgfgApJAouMWAykygPaST35nfsr6ol8vlL9nbM36QiQMoX5cW2GoTBC2tip4jKcN1xBVnmAEwuaor1Zh4BgKlb1j4BhSrSIQhlINtsUJWY8wlArAXG3o1T+KJXwwbBlC1rxCaw8TzJrVRaR6IhCg9oc0qsFqGWMAqEsM
+  </data>
+  </layer>
+  <layer id="4" name="doors" width="80" height="80">
+   <data encoding="base64" compression="zstd">
+   KLUv/WAAY90CAOAAYwEAgICdne8AAAAqAQAAK2MAAABi8AAAAPEAEoAANSxsNWkzVKfXB1R7ZVhOH7OCa0N12OEE/uLBr5W48RdgOmvcLx1QE6DpQ0tJe4NuAUUtAQUBKDTAdyc=
+  </data>
+  </layer>
+ </group>
+</map>
