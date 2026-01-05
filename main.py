@@ -107,8 +107,10 @@ class MyGame(arcade.Window):
         if key == arcade.key.S:
             self.player.change_y = -SPEED
         if key == arcade.key.D:
+            self.player.side = 'right'
             self.player.change_x = SPEED
         if key == arcade.key.A:
+            self.player.side = 'left'
             self.player.change_x = -SPEED
 
     def on_key_release(self, key, modifiers):
@@ -118,8 +120,10 @@ class MyGame(arcade.Window):
         if key == arcade.key.S:
             self.player.change_y = 0
         if key == arcade.key.D:
+            self.player.side = 'right'
             self.player.change_x = 0
         if key == arcade.key.A:
+            self.player.side = 'left'
             self.player.change_x = 0
 
 

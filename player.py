@@ -6,7 +6,7 @@ class Player(arcade.Sprite):
     def __init__(self):
         super().__init__(scale=SCALE)
         texture = arcade.load_texture('assets/player/IDLE.png')
-        
+        self.side = 'right'
         frame_w = 96
         frame_h = 84
         
@@ -29,6 +29,9 @@ class Player(arcade.Sprite):
             self.curr_texture_index += 1
             if self.curr_texture_index >= len(self.idle_frames):
                 self.curr_texture_index = 0
-                
-            self.texture = self.idle_frames[self.curr_texture_index]
+
+            if self.side == 'right':
+                self.texture = self.idle_frames[self.curr_texture_index]
+            else:
+                self.texture = self.idle_frames[self.curr_texture_index].flip_horizontally()
             self.change_time = 0.0
