@@ -7,7 +7,7 @@ SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
 SCREEN_TITLE = "The Conqueror of Dungeons"
 TILE_SCALING = 3
-SPEED = 3
+SPEED = 2
 SCALE = 0.5
 CAMERA_LERP = 0.1
 
@@ -104,14 +104,18 @@ class MyGame(arcade.Window):
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
             self.player.change_y = SPEED
+            self.player.is_walking = True
         if key == arcade.key.S:
             self.player.change_y = -SPEED
+            self.player.is_walking = True
         if key == arcade.key.D:
             self.player.side = 'right'
             self.player.change_x = SPEED
+            self.player.is_walking = True
         if key == arcade.key.A:
             self.player.side = 'left'
             self.player.change_x = -SPEED
+            self.player.is_walking = True
 
     def on_key_release(self, key, modifiers):
         # print(self.player.position)
@@ -125,6 +129,10 @@ class MyGame(arcade.Window):
         if key == arcade.key.A:
             self.player.side = 'left'
             self.player.change_x = 0
+
+        if self.player.change_x == 0 and self.player.change_y == 0:
+            self.player.is_walking = False
+            self.player.curr_texture_index = 0
 
 
 def main():
