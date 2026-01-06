@@ -29,13 +29,13 @@ class MyGame(arcade.Window):
 
     def setup(self):
         self.player = Player()
-        self.spawn_player(0, 6)
+        self.spawn_player(2, 5)
 
         self.all_sprites.append(self.player)
 
         self.world_camera = Camera2D()
 
-        map_name = "assets/map1.tmx"
+        map_name = "assets/map2.tmx"
         self.tile_map = arcade.load_tilemap(map_name, scaling=TILE_SCALING)
 
         self.wall_list = self.tile_map.sprite_lists["walls"]
