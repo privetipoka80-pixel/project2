@@ -29,7 +29,7 @@ class MyGame(arcade.Window):
 
     def setup(self):
         self.player = Player()
-        self.spawn_player(0, 6) 
+        self.spawn_player(0, 6)
 
         self.all_sprites.append(self.player)
 
@@ -40,14 +40,14 @@ class MyGame(arcade.Window):
 
         self.wall_list = self.tile_map.sprite_lists["walls"]
         self.torches_list = self.tile_map.sprite_lists["torches"]
-        self.details_list = self.tile_map.sprite_lists["details"]
+        self.details_list = self.tile_map.sprite_lists["colission"]
 
         self.torch_frames = []
+        self.torches = arcade.SpriteList()
         for i in range(1, 9):
             texture = arcade.load_texture(f"assets/sprites/f{i}.png")
             self.torch_frames.append(texture)
 
-        self.torches = arcade.SpriteList()
         for sprite in self.torches_list:
             self.torches.append(sprite)
 
@@ -69,10 +69,9 @@ class MyGame(arcade.Window):
         """Спавн игрока в сетке комнат/коридоров"""
         x = grid_x * self.cell_size + self.cell_size // 2
         y = grid_y * self.cell_size + self.cell_size // 2
-        
+
         self.player.center_x = x
         self.player.center_y = y
-
 
     def on_draw(self):
         """Отрисовка кадра"""
@@ -85,8 +84,6 @@ class MyGame(arcade.Window):
         self.physics_engine.update()
         self.physics_engine2.update()
         self.world_camera.use()
-
-
 
     def on_update(self, delta_time):
         """Обновление логики игры"""
@@ -124,7 +121,7 @@ class MyGame(arcade.Window):
             self.player.is_walking = True
 
         if key == arcade.key.K:
-            self.player.attack() 
+            self.player.attack()
 
     def on_key_release(self, key, modifiers):
         # print(self.player.position)
