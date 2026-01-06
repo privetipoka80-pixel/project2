@@ -23,17 +23,14 @@ class MyGame(arcade.Window):
         color = Color.from_hex_string('181425')
         arcade.set_background_color((color[0], color[1], color[2]))
 
-        self.cell_size = 32
+        self.cell_size = 512
 
         self.all_sprites = arcade.SpriteList()
 
     def setup(self):
-
         self.player = Player()
-        x2 = START_PLAYER_X * self.cell_size + self.cell_size // 2
-        y2 = START_PLAYER_y * self.cell_size + self.cell_size // 2
+        self.spawn_player(0, 6) 
 
-        self.player.position = (x2, y2)
         self.all_sprites.append(self.player)
 
         self.world_camera = Camera2D()
@@ -67,6 +64,15 @@ class MyGame(arcade.Window):
         self.physics_engine2 = arcade.PhysicsEngineSimple(
             self.player, self.details_list
         )
+
+    def spawn_player(self, grid_x, grid_y):
+        """Спавн игрока в сетке комнат/коридоров"""
+        x = grid_x * self.cell_size + self.cell_size // 2
+        y = grid_y * self.cell_size + self.cell_size // 2
+        
+        self.player.center_x = x
+        self.player.center_y = y
+
 
     def on_draw(self):
         """Отрисовка кадра"""
