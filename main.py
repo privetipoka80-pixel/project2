@@ -28,6 +28,14 @@ class MyGame(arcade.Window):
         self.all_sprites = arcade.SpriteList()
 
     def setup(self):
+        self.background_music = arcade.load_sound('assets/sounds/MUSIC.mp3')
+
+        self.music_player = arcade.play_sound(
+            self.background_music,
+            volume=0.3,
+            loop=True
+        )
+    
         self.player = Player()
         self.spawn_player(2, 5)
 
