@@ -125,7 +125,6 @@ class Player(arcade.Sprite):
                     self.texture = self.texture.flip_horizontally()
     
     def attack(self):
-        """Начать атаку циклически переключаясь между атаками"""
         if not self.is_attacking:
             self.current_attack = self.attack_sequence[self.current_attack_index]
 
