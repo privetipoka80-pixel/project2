@@ -123,6 +123,9 @@ class MyGame(arcade.Window):
             self.player.change_x = -SPEED
             self.player.is_walking = True
 
+        if key == arcade.key.K:
+            self.player.attack() 
+
     def on_key_release(self, key, modifiers):
         # print(self.player.position)
         if key == arcade.key.W:
