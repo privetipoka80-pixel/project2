@@ -40,7 +40,7 @@ class MyGame(arcade.Window):
 
         self.wall_list = self.tile_map.sprite_lists["walls"]
         self.torches_list = self.tile_map.sprite_lists["torches"]
-        self.details_list = self.tile_map.sprite_lists["colission"]
+        self.details_list = self.tile_map.sprite_lists["details"]
 
         self.torch_frames = []
         self.torches = arcade.SpriteList()
