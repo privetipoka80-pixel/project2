@@ -3,6 +3,7 @@ from arcade.camera import Camera2D
 from arcade.types import Color
 # pip install pytiled-parser[zstd]
 from player import Player
+from enemy import Enemy
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
 SCREEN_TITLE = "The Conqueror of Dungeons"
@@ -39,6 +40,11 @@ class MyGame(arcade.Window):
         self.player = Player()
         self.spawn_player(2, 5)
 
+        self.enemy = Enemy()
+        self.spawn_enemy(2, 5)
+
+        self.all_sprites.append(self.enemy)
+
         self.all_sprites.append(self.player)
 
         self.world_camera = Camera2D()
@@ -73,6 +79,10 @@ class MyGame(arcade.Window):
             self.player, self.details_list
         )
 
+        self.physics_engine3 = arcade.PhysicsEngineSimple(
+            self.enemy, self.wall_list
+        )
+
     def spawn_player(self, grid_x, grid_y):
         """Спавн игрока в сетке комнат/коридоров"""
         x = grid_x * self.cell_size + self.cell_size // 2
@@ -80,6 +90,14 @@ class MyGame(arcade.Window):
 
         self.player.center_x = x
         self.player.center_y = y
+
+    def spawn_enemy(self, grid_x, grid_y):
+        """Спавн игрока в сетке комнат/коридоров"""
+        x = grid_x * self.cell_size + self.cell_size // 2
+        y = grid_y * self.cell_size + self.cell_size // 2
+
+        self.enemy.center_x = x
+        self.enemy.center_y = y
 
     def on_draw(self):
         """Отрисовка кадра"""
@@ -91,6 +109,7 @@ class MyGame(arcade.Window):
 
         self.physics_engine.update()
         self.physics_engine2.update()
+        self.physics_engine3.update()
         self.world_camera.use()
 
     def on_update(self, delta_time):
@@ -103,6 +122,8 @@ class MyGame(arcade.Window):
 
         self.player.update_animation(delta_time)
         self.animation_timer += delta_time
+
+        self.enemy.update_animation(delta_time)
 
         if self.animation_timer >= self.animation_speed:
             self.animation_timer = 0
