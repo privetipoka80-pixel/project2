@@ -1,9 +1,10 @@
+# pip install pytiled-parser[zstd]
+from generate_enemy import Generate_enemy
 import arcade
 from arcade.camera import Camera2D
 from arcade.types import Color
-# pip install pytiled-parser[zstd]
 from player import Player
-from enemy import Enemy
+
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
 SCREEN_TITLE = "The Conqueror of Dungeons"
@@ -12,45 +13,41 @@ SPEED = 2
 SCALE = 0.5
 CAMERA_LERP = 0.1
 
-# map1(11.5, 108)
-START_PLAYER_X = 11.5
-START_PLAYER_y = 108
-
 
 class MyGame(arcade.Window):
     def __init__(self):
-
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT,
+                         SCREEN_TITLE, vsync=True, fullscreen=True)
         color = Color.from_hex_string('181425')
         arcade.set_background_color((color[0], color[1], color[2]))
 
         self.cell_size = 512
-
         self.all_sprites = arcade.SpriteList()
+        self.enemies = Generate_enemy()
+        self.set_update_rate(1/144)
 
     def setup(self):
         self.background_music = arcade.load_sound('assets/sounds/MUSIC.mp3')
 
-        self.music_player = arcade.play_sound(
-            self.background_music,
-            volume=0.3,
-            loop=True
-        )
-    
+        # self.music_player = arcade.play_sound(
+        #     self.background_music,
+        #     volume=0.3,
+        #     loop=True
+        # )
+
         self.player = Player()
-        self.spawn_player(2, 5)
-
-        self.enemy = Enemy()
-        self.spawn_enemy(2, 5)
-
-        self.all_sprites.append(self.enemy)
-
+        self.spawn_player(3, 3)
         self.all_sprites.append(self.player)
+
+        self.enemies.spawn_in_grid(3, 2)
+        self.enemies.spawn_in_grid(3, 3)
+        self.enemies.spawn_in_grid(3, 5)
 
         self.world_camera = Camera2D()
 
         map_name = "assets/map2.tmx"
         self.tile_map = arcade.load_tilemap(map_name, scaling=TILE_SCALING)
+        self.scene = arcade.Scene.from_tilemap(self.tile_map)
 
         self.wall_list = self.tile_map.sprite_lists["walls"]
         self.torches_list = self.tile_map.sprite_lists["torches"]
@@ -58,6 +55,7 @@ class MyGame(arcade.Window):
 
         self.torch_frames = []
         self.torches = arcade.SpriteList()
+
         for i in range(1, 9):
             texture = arcade.load_texture(f"assets/sprites/f{i}.png")
             self.torch_frames.append(texture)
@@ -69,35 +67,17 @@ class MyGame(arcade.Window):
         self.current_frame = 0
         self.animation_speed = 0.1
 
-        self.scene = arcade.Scene.from_tilemap(self.tile_map)
-
         self.physics_engine = arcade.PhysicsEngineSimple(
-            self.player, self.wall_list
-        )
-
+            self.player, self.wall_list)
         self.physics_engine2 = arcade.PhysicsEngineSimple(
-            self.player, self.details_list
-        )
-
-        self.physics_engine3 = arcade.PhysicsEngineSimple(
-            self.enemy, self.wall_list
-        )
+            self.player, self.details_list)
 
     def spawn_player(self, grid_x, grid_y):
         """Спавн игрока в сетке комнат/коридоров"""
         x = grid_x * self.cell_size + self.cell_size // 2
         y = grid_y * self.cell_size + self.cell_size // 2
-
         self.player.center_x = x
         self.player.center_y = y
-
-    def spawn_enemy(self, grid_x, grid_y):
-        """Спавн игрока в сетке комнат/коридоров"""
-        x = grid_x * self.cell_size + self.cell_size // 2
-        y = grid_y * self.cell_size + self.cell_size // 2
-
-        self.enemy.center_x = x
-        self.enemy.center_y = y
 
     def on_draw(self):
         """Отрисовка кадра"""
@@ -106,24 +86,23 @@ class MyGame(arcade.Window):
         self.player.update()
         self.all_sprites.draw(pixelated=True)
         self.torches.draw(pixelated=True)
-
         self.physics_engine.update()
         self.physics_engine2.update()
-        self.physics_engine3.update()
         self.world_camera.use()
+        self.enemies.draw(pixelated=True)
 
     def on_update(self, delta_time):
         """Обновление логики игры"""
         self.world_camera.position = arcade.math.lerp_2d(
             self.world_camera.position,
             (self.player.position),
-            CAMERA_LERP,
-        )
+            CAMERA_LERP)
+        for enemy in self.enemies:
+            enemy.update_ai(self.player, delta_time, self.wall_list)
+            enemy.update_animation(delta_time)
 
         self.player.update_animation(delta_time)
         self.animation_timer += delta_time
-
-        self.enemy.update_animation(delta_time)
 
         if self.animation_timer >= self.animation_speed:
             self.animation_timer = 0
