@@ -1,5 +1,5 @@
 import arcade
-from random import uniform
+from random import uniform, random
 import time
 import math
 SCALE = 2
@@ -31,11 +31,6 @@ class Enemy(arcade.Sprite):
 
         self.is_walking = False
         self.is_attacking = False
-        self.current_attack = None
-
-        self.attack_sequence = ['attack1', 'attack2', 'attack3']
-        self.sound_sequence = ['sound1', 'sound2', 'sound1']
-        self.current_attack_index = 0
 
         self.current_frame = 0
         self.animation_time = 0
@@ -98,9 +93,21 @@ class Enemy(arcade.Sprite):
         """Обновляет движение врага"""
         self.move_direction_timer += delta_time
 
+        if random() < 0.05:
+            self.is_walking = not self.is_walking
+
+            if self.is_walking:
+                self.current_direction = uniform(0, 6.28)
+                self.direction_change_interval = uniform(1, 3)
+            else:
+                self.change_x = 0
+                self.change_y = 0
+                return
+        if not self.is_walking:
+            return
         if self.move_direction_timer >= self.direction_change_interval:
             self.move_direction_timer = 0
-            self.current_direction = uniform(0, 6.3)
+            self.current_direction = uniform(0, 6.28)
             self.direction_change_interval = uniform(1, 3)
 
         self.change_x = math.cos(self.current_direction) * self.speed
@@ -113,8 +120,6 @@ class Enemy(arcade.Sprite):
         elif self.change_x < 0:
             self.side = 'left'
 
-        self.is_walking = abs(self.change_x) > 0 or abs(self.change_y) > 0
-
     def bounce_from_wall(self):
         """Отходит от стены при столкновении"""
         self.current_direction += math.pi
@@ -124,29 +129,32 @@ class Enemy(arcade.Sprite):
 
     def update_ai(self, player, delta_time, wall_list=None):
         """Основной метод ии врага"""
-        # расстояние до игрока
         dx = player.center_x - self.center_x
         dy = player.center_y - self.center_y
         distance_to_player = math.sqrt(dx * dx + dy * dy)
-
-        # игрок близко, преследовать его
         if distance_to_player < self.detection_range:
             angle_to_player = math.atan2(dy, dx)
             self.current_direction = angle_to_player
             self.speed = 2.0
-            self.is_walking = True
-            if distance_to_player < 50:
+            if distance_to_player > 50:
+                self.is_walking = True
+            else:
+                self.is_walking = False
+                self.change_x = 0
+                self.change_y = 0
                 self.attack()
         else:
             self.update_movement(delta_time)
             self.speed = 1.5
-
-            # столкновения со стенами
-            if wall_list and arcade.check_for_collision_with_list(self, wall_list):
+        if wall_list and self.is_walking:
+            if arcade.check_for_collision_with_list(self, wall_list):
                 current_time = time.time()
                 if current_time - self.last_collision_time > self.collision_cooldown:
                     self.bounce_from_wall()
                     self.last_collision_time = current_time
+                    self.is_walking = False
+                    self.change_x = 0
+                    self.change_y = 0
 
     def get_current_speed(self):
         """Возвращает текущую скорость анимации"""
