@@ -38,10 +38,12 @@ class MyGame(arcade.Window):
         self.player = Player()
         self.spawn_player(3, 3)
         self.all_sprites.append(self.player)
-
-        self.enemies.spawn_in_grid(3, 2)
-        self.enemies.spawn_in_grid(3, 3)
-        self.enemies.spawn_in_grid(3, 5)
+        for i in range(10):
+            self.enemies.spawn_in_grid(3, 2)
+        for i in range(10):
+            self.enemies.spawn_in_grid(3, 3)
+        for i in range(10):
+            self.enemies.spawn_in_grid(3, 5)
 
         self.world_camera = Camera2D()
 
