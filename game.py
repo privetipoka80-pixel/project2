@@ -4,14 +4,7 @@ import arcade
 from arcade.camera import Camera2D
 from arcade.types import Color
 from player import Player
-
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 700
-SCREEN_TITLE = "The Conqueror of Dungeons"
-TILE_SCALING = 3
-SPEED = 2
-SCALE = 0.5
-CAMERA_LERP = 0.1
+from config import *
 
 
 class TheConquerorOfDungeons(arcade.Window):
@@ -36,7 +29,7 @@ class TheConquerorOfDungeons(arcade.Window):
         # )
 
         self.player = Player()
-        self.spawn_player(3, 3)
+        self.spawn_player(2, 5)
         self.all_sprites.append(self.player)
         for i in range(10):
             self.enemies.spawn_in_grid(3, 2)
@@ -47,7 +40,7 @@ class TheConquerorOfDungeons(arcade.Window):
 
         self.world_camera = Camera2D()
 
-        map_name = "assets/map2.tmx"
+        map_name = "assets/map1.tmx"
         self.tile_map = arcade.load_tilemap(map_name, scaling=TILE_SCALING)
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
 
@@ -150,5 +143,3 @@ class TheConquerorOfDungeons(arcade.Window):
         if self.player.change_x == 0 and self.player.change_y == 0:
             self.player.is_walking = False
             self.player.curr_texture_index = 0
-
-
