@@ -1,116 +1,68 @@
+# pip install pytiled-parser[zstd]
+from generate_enemy import Generate_enemy
 import arcade
 from arcade.camera import Camera2D
 from arcade.types import Color
-
+from player import Player
+from start_menu import StartMenu
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
 SCREEN_TITLE = "The Conqueror of Dungeons"
 TILE_SCALING = 3
-SPEED = 5
+SPEED = 2
 SCALE = 0.5
 CAMERA_LERP = 0.1
 
 
-START_PLAYER_X = 2
-START_PLAYER_y = 5
-
-
-class StartView(arcade.View):
-    def __init__(self):
-        super().__init__()
-
-    def on_show(self):
-        color = arcade.color.BLACK
-
-    def on_draw(self):
-        self.clear()
-
-        arcade.draw_lrbt_rectangle_filled(SCREEN_WIDTH // 2 - 100, SCREEN_WIDTH // 2 + 100,
-                                          SCREEN_HEIGHT // 2 - 30, SCREEN_HEIGHT // 2 + 30,
-                                          arcade.color.WHITE)
-        arcade.draw_lrbt_rectangle_filled(SCREEN_WIDTH // 2 - 100, SCREEN_WIDTH // 2 + 100,
-                                          SCREEN_HEIGHT // 2 - 130, SCREEN_HEIGHT // 2 - 70,
-                                          arcade.color.WHITE)
-
-        arcade.draw_text("The Conqueror of Dungeons",
-                         SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100,
-                         arcade.color.WHITE, font_size=50,
-                         anchor_x="center", anchor_y="center")
-
-        arcade.draw_text("СТАРТ",
-                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                         arcade.color.BLACK, font_size=30,
-                         anchor_x="center", anchor_y="center")
-
-        arcade.draw_text("ВЫХОД",
-                         SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100,
-                         arcade.color.BLACK, font_size=30,
-                         anchor_x="center", anchor_y="center")
-
-    def on_mouse_press(self, x, y, button, modifiers):
-        start_left = SCREEN_WIDTH // 2 - 100
-        start_right = SCREEN_WIDTH // 2 + 100
-        start_bottom = SCREEN_HEIGHT // 2 - 30
-        start_top = SCREEN_HEIGHT // 2 + 30
-
-        exit_left = SCREEN_WIDTH // 2 - 100
-        exit_right = SCREEN_WIDTH // 2 + 100
-        exit_bottom = SCREEN_HEIGHT // 2 - 130
-        exit_top = SCREEN_HEIGHT // 2 - 70
-
-        if start_left <= x <= start_right and start_bottom <= y <= start_top:
-            game_view = MyGame()
-            game_view.setup()
-            self.window.show_view(game_view)
-
-        elif exit_left <= x <= exit_right and exit_bottom <= y <= exit_top:
-            arcade.close_window()
-
-    def on_key_press(self, key, modifiers):
-        if key == arcade.key.ENTER or key == arcade.key.SPACE:
-            game_view = MyGame()
-            game_view.setup()
-            self.window.show_view(game_view)
-        elif key == arcade.key.ESCAPE:
-            arcade.close_window()
-
-
 class MyGame(arcade.Window):
     def __init__(self):
-
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT,
+                         SCREEN_TITLE, vsync=True, fullscreen=True)
         color = Color.from_hex_string('181425')
         arcade.set_background_color((color[0], color[1], color[2]))
 
-        self.cell_size = 32
-
+        self.cell_size = 512
         self.all_sprites = arcade.SpriteList()
+        self.enemies = Generate_enemy()
+        self.set_update_rate(1/144)
 
     def setup(self):
+        self.background_music = arcade.load_sound('assets/sounds/MUSIC.mp3')
 
-        self.don = (':resources:images/enemies/slimePurple.png')
-        self.player = arcade.Sprite(self.don, SCALE)
-        x2 = START_PLAYER_X * self.cell_size + self.cell_size // 2
-        y2 = START_PLAYER_y * self.cell_size + self.cell_size // 2
+        # self.music_player = arcade.play_sound(
+        #     self.background_music,
+        #     volume=0.3,
+        #     loop=True
+        # )
 
-        self.player.position = (x2, y2)
+        self.player = Player()
+        self.spawn_player(3, 3)
         self.all_sprites.append(self.player)
+        for i in range(10):
+            self.enemies.spawn_in_grid(3, 2)
+        for i in range(10):
+            self.enemies.spawn_in_grid(3, 3)
+        for i in range(10):
+            self.enemies.spawn_in_grid(3, 5)
 
         self.world_camera = Camera2D()
 
-        map_name = "assets/map1.tmx"
+        map_name = "assets/map2.tmx"
         self.tile_map = arcade.load_tilemap(map_name, scaling=TILE_SCALING)
+        self.scene = arcade.Scene.from_tilemap(self.tile_map)
 
         self.wall_list = self.tile_map.sprite_lists["walls"]
         self.torches_list = self.tile_map.sprite_lists["torches"]
+        self.details_list = self.tile_map.sprite_lists["details"]
 
         self.torch_frames = []
+        self.torches = arcade.SpriteList()
+
         for i in range(1, 9):
             texture = arcade.load_texture(f"assets/sprites/f{i}.png")
             self.torch_frames.append(texture)
 
-        self.torches = arcade.SpriteList()
         for sprite in self.torches_list:
             self.torches.append(sprite)
 
@@ -118,11 +70,17 @@ class MyGame(arcade.Window):
         self.current_frame = 0
         self.animation_speed = 0.1
 
-        self.scene = arcade.Scene.from_tilemap(self.tile_map)
-
         self.physics_engine = arcade.PhysicsEngineSimple(
-            self.player, self.wall_list
-        )
+            self.player, self.wall_list)
+        self.physics_engine2 = arcade.PhysicsEngineSimple(
+            self.player, self.details_list)
+
+    def spawn_player(self, grid_x, grid_y):
+        """Спавн игрока в сетке комнат/коридоров"""
+        x = grid_x * self.cell_size + self.cell_size // 2
+        y = grid_y * self.cell_size + self.cell_size // 2
+        self.player.center_x = x
+        self.player.center_y = y
 
     def on_draw(self):
         """Отрисовка кадра"""
@@ -131,17 +89,22 @@ class MyGame(arcade.Window):
         self.player.update()
         self.all_sprites.draw(pixelated=True)
         self.torches.draw(pixelated=True)
-
         self.physics_engine.update()
+        self.physics_engine2.update()
         self.world_camera.use()
+        self.enemies.draw(pixelated=True)
 
     def on_update(self, delta_time):
         """Обновление логики игры"""
         self.world_camera.position = arcade.math.lerp_2d(
             self.world_camera.position,
             (self.player.position),
-            CAMERA_LERP,
-        )
+            CAMERA_LERP)
+        for enemy in self.enemies:
+            enemy.update_ai(self.player, delta_time, self.wall_list)
+            enemy.update_animation(delta_time)
+
+        self.player.update_animation(delta_time)
         self.animation_timer += delta_time
 
         if self.animation_timer >= self.animation_speed:
@@ -155,27 +118,44 @@ class MyGame(arcade.Window):
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
             self.player.change_y = SPEED
+            self.player.is_walking = True
         if key == arcade.key.S:
             self.player.change_y = -SPEED
+            self.player.is_walking = True
         if key == arcade.key.D:
+            self.player.side = 'right'
             self.player.change_x = SPEED
+            self.player.is_walking = True
         if key == arcade.key.A:
+            self.player.side = 'left'
             self.player.change_x = -SPEED
+            self.player.is_walking = True
+
+        if key == arcade.key.K:
+            self.player.attack()
 
     def on_key_release(self, key, modifiers):
+        # print(self.player.position)
         if key == arcade.key.W:
             self.player.change_y = 0
         if key == arcade.key.S:
             self.player.change_y = 0
         if key == arcade.key.D:
+            self.player.side = 'right'
             self.player.change_x = 0
         if key == arcade.key.A:
+            self.player.side = 'left'
             self.player.change_x = 0
+
+        if self.player.change_x == 0 and self.player.change_y == 0:
+            self.player.is_walking = False
+            self.player.curr_texture_index = 0
 
 
 def main():
-    game = MyGame()
-    game.setup()
+    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, vsync=True, fullscreen=True)
+    start_menu = StartMenu(MyGame)
+    window.show_view(start_menu)
     arcade.run()
 
 
