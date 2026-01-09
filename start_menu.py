@@ -70,4 +70,5 @@ class StartMenu(arcade.View):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:
+
             arcade.exit()
