@@ -8,6 +8,7 @@ SCALE = 2
 class Player(arcade.Sprite):
     def __init__(self):
         super().__init__(scale=SCALE)
+        self.hit_box_algoritm = 'Detailed'
 
         self.idle_path = 'assets/player/IDLE.png'
         self.walk_path = 'assets/player/WALK.png'

@@ -1,10 +1,11 @@
-from game import TheConquerorOfDungeons
 import arcade
+from menu import MenuView
 
 
 def main():
-    game = TheConquerorOfDungeons()
-    game.setup()
+    window = arcade.Window(vsync=True, fullscreen=True)
+    menu_view = MenuView()
+    window.show_view(menu_view)
     arcade.run()
 
 

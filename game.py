@@ -7,17 +7,16 @@ from player import Player
 from config import *
 
 
-class TheConquerorOfDungeons(arcade.Window):
+class TheConquerorOfDungeons(arcade.View):
     def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT,
-                         SCREEN_TITLE, vsync=True, fullscreen=True)
+        super().__init__()
         color = Color.from_hex_string('181425')
         arcade.set_background_color((color[0], color[1], color[2]))
 
         self.cell_size = 512
         self.all_sprites = arcade.SpriteList()
         self.enemies = Generate_enemy()
-        self.set_update_rate(1/144)
+        self.setup()
 
     def setup(self):
         self.background_music = arcade.load_sound('assets/sounds/MUSIC.mp3')
