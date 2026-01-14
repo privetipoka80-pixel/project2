@@ -1,43 +1,33 @@
-# pip install pytiled-parser[zstd]
 from generate_enemy import Generate_enemy
 import arcade
 from arcade.camera import Camera2D
 from arcade.types import Color
 from player import Player
+from config import *
 
 
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 700
-SCREEN_TITLE = "The Conqueror of Dungeons"
-TILE_SCALING = 3
-SPEED = 2
-SCALE = 0.5
-CAMERA_LERP = 0.1
 
-
-class TheConquerorOfDungeons(arcade.Window):
+class TheConquerorOfDungeons(arcade.View):
     def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT,
-                         SCREEN_TITLE, vsync=True, fullscreen=True)
+        super().__init__()
         color = Color.from_hex_string('181425')
         arcade.set_background_color((color[0], color[1], color[2]))
 
         self.cell_size = 512
         self.all_sprites = arcade.SpriteList()
         self.enemies = Generate_enemy()
-        self.set_update_rate(1/144)
+        self.setup()
 
     def setup(self):
         self.background_music = arcade.load_sound('assets/sounds/MUSIC.mp3')
-
-        # self.music_player = arcade.play_sound(
-        #     self.background_music,
-        #     volume=0.3,
-        #     loop=True
-        # )
+        self.music_player = arcade.play_sound(
+            self.background_music,
+            volume=0.3,
+            loop=True
+        )
 
         self.player = Player()
-        self.spawn_player(3, 3)
+        self.spawn_player(2, 5)
         self.all_sprites.append(self.player)
         for i in range(10):
             self.enemies.spawn_in_grid(3, 2)
@@ -48,7 +38,7 @@ class TheConquerorOfDungeons(arcade.Window):
 
         self.world_camera = Camera2D()
 
-        map_name = "assets/map2.tmx"
+        map_name = "assets/map1.tmx"
         self.tile_map = arcade.load_tilemap(map_name, scaling=TILE_SCALING)
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
 
@@ -76,14 +66,12 @@ class TheConquerorOfDungeons(arcade.Window):
             self.player, self.details_list)
 
     def spawn_player(self, grid_x, grid_y):
-        """Спавн игрока в сетке комнат/коридоров"""
         x = grid_x * self.cell_size + self.cell_size // 2
         y = grid_y * self.cell_size + self.cell_size // 2
         self.player.center_x = x
         self.player.center_y = y
 
     def on_draw(self):
-        """Отрисовка кадра"""
         self.clear()
         self.scene.draw(pixelated=True)
         self.all_sprites.draw(pixelated=True)
@@ -92,7 +80,6 @@ class TheConquerorOfDungeons(arcade.Window):
         self.enemies.draw(pixelated=True)
 
     def on_update(self, delta_time):
-        """Обновление логики игры"""
         self.player.update()
         self.physics_engine.update()
         self.physics_engine2.update()
@@ -131,20 +118,14 @@ class TheConquerorOfDungeons(arcade.Window):
             self.player.side = 'left'
             self.player.change_x = -SPEED
             self.player.is_walking = True
-
         if key == arcade.key.K:
             self.player.attack()
-
         if key == arcade.key.ESCAPE:
-            self.close()
-            import pause_menu
-            window = arcade.Window(1000, 700, "The Conqueror of Dungeons", fullscreen=True)
-            pause = pause_menu.PauseMenu(window)
-            window.show_view(pause)
-            arcade.run()
+            from menu import MenuView
+            menu_view = MenuView(self)
+            self.window.show_view(menu_view)
 
     def on_key_release(self, key, modifiers):
-        # print(self.player.position)
         if key == arcade.key.W:
             self.player.change_y = 0
         if key == arcade.key.S:
