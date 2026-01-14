@@ -1,6 +1,7 @@
 import arcade
 from random import uniform, random
 import time
+import random
 import math
 SCALE = 2
 
@@ -29,9 +30,6 @@ class Enemy(arcade.Sprite):
         self.load_animations()
         self.texture = self.idle_frames[0]
 
-        self.is_walking = False
-        self.is_attacking = False
-
         self.current_frame = 0
         self.animation_time = 0
 
@@ -40,9 +38,6 @@ class Enemy(arcade.Sprite):
             'walk': 0.05,
             'attack': 0.05
         }
-
-        self.sound_played = False
-        self.sound_played2 = False
 
         self.speed = 1.5
         self.change_x = 0  # скорость x
@@ -55,8 +50,18 @@ class Enemy(arcade.Sprite):
         self.collision_cooldown = 0.3
         self.detection_range = 200
 
+        self.state = 'idle'
+
+        self.random_move_cooldown = 0
+        self.attack_cooldown = 0
+        self.random_move_chance = 0.03
+        self.attack_cooldown_time = 1
+        self.random_move_duration = 2
+        self.chase_speed = 1.5
+        self.attack_range = 50
+
     def load_animations(self):
-        """Загружает все анимации персонажа"""
+        """Загружает все анимации врага"""
         # анимация покоя
         idle_texture = arcade.load_texture(self.idle_path)
         self.idle_frames = []
@@ -83,84 +88,106 @@ class Enemy(arcade.Sprite):
 
     def get_current_frames(self):
         """Возвращает текущие кадры анимации"""
-        if self.is_attacking:
+        if self.state == 'attack':
             return self.attack_frames
-        if self.is_walking:
+        elif self.state in ['walk', 'chase']:
             return self.walk_frames
         return self.idle_frames
 
-    def update_movement(self, delta_time):
-        """Обновляет движение врага"""
-        self.move_direction_timer += delta_time
-
-        if random() < 0.05:
-            self.is_walking = not self.is_walking
-
-            if self.is_walking:
-                self.current_direction = uniform(0, 6.28)
-                self.direction_change_interval = uniform(1, 3)
-            else:
-                self.change_x = 0
-                self.change_y = 0
-                return
-        if not self.is_walking:
-            return
-        if self.move_direction_timer >= self.direction_change_interval:
-            self.move_direction_timer = 0
-            self.current_direction = uniform(0, 6.28)
-            self.direction_change_interval = uniform(1, 3)
-
-        self.change_x = math.cos(self.current_direction) * self.speed
-        self.change_y = math.sin(self.current_direction) * self.speed
-        self.center_x += self.change_x
-        self.center_y += self.change_y
-
-        if self.change_x > 0:
-            self.side = 'right'
-        elif self.change_x < 0:
-            self.side = 'left'
-
-    def bounce_from_wall(self):
-        """Отходит от стены при столкновении"""
-        self.current_direction += math.pi
-        self.current_direction += uniform(-0.5, 0.5)
-
-        self.move_direction_timer = 0
-
     def update_ai(self, player, delta_time, wall_list=None):
         """Основной метод ии врага"""
+        if self.random_move_cooldown > 0:
+            self.random_move_cooldown -= delta_time
+
+        if self.attack_cooldown > 0:
+            self.attack_cooldown -= delta_time
+
         dx = player.center_x - self.center_x
         dy = player.center_y - self.center_y
-        distance_to_player = math.sqrt(dx * dx + dy * dy)
-        if distance_to_player < self.detection_range:
-            angle_to_player = math.atan2(dy, dx)
-            self.current_direction = angle_to_player
-            self.speed = 2.0
-            if distance_to_player > 50:
-                self.is_walking = True
+        distance_sq = dx * dx + dy * dy
+
+        if distance_sq < self.attack_range * self.attack_range:
+            self.state = 'attack'
+            self.change_x = 0
+            self.change_y = 0
+
+            if self.attack_cooldown <= 0:
+                self.play_attack_sound()
+                self.attack_cooldown = self.attack_cooldown_time
+        elif distance_sq < self.detection_range * self.detection_range:
+            distance = math.sqrt(distance_sq)
+            self.state = 'chase'
+            self.change_x = (dx / distance) * self.chase_speed
+            self.change_y = (dy / distance) * self.chase_speed
+
+            self.center_x += self.change_x
+            self.center_y += self.change_y
+
+            if self.change_x > 0:
+                self.side = 'right'
+            elif self.change_x < 0:
+                self.side = 'left'
+        else:
+            self.random_walk(delta_time)
+
+        if wall_list and self.change_x != 0 and self.change_y != 0:
+            self.handle_wall_collisions(wall_list)
+
+    def handle_wall_collisions(self, wall_list):
+        """Обработка столкновений врага со стенами"""
+        if arcade.check_for_collision_with_list(self, wall_list):
+            self.change_x *= -1
+            self.change_y *= -1
+            self.center_x += self.change_x * 2
+            self.center_y += self.change_y * 2
+
+            if self.change_x > 0:
+                self.side = 'right'
+            elif self.change_x < 0:
+                self.side = 'left'
+
+    def random_walk(self, delta_time):
+        """Случайное блуждание"""
+        self.move_timer += delta_time
+
+        if random.random() < self.random_move_chance and self.random_move_cooldown <= 0:
+            if self.state == 'idle':
+                # движение в случайном направлении
+                self.state = 'walk'
+                angle = random.uniform(0, 6.28)
+                self.change_x = math.cos(angle) * self.speed
+                self.change_y = math.sin(angle) * self.speed
+                self.random_move_cooldown = random.uniform(1, 3)
             else:
-                self.is_walking = False
+                self.state = 'idle'
                 self.change_x = 0
                 self.change_y = 0
-                self.attack()
-        else:
-            self.update_movement(delta_time)
-            self.speed = 1.5
-        if wall_list and self.is_walking:
-            if arcade.check_for_collision_with_list(self, wall_list):
-                current_time = time.time()
-                if current_time - self.last_collision_time > self.collision_cooldown:
-                    self.bounce_from_wall()
-                    self.last_collision_time = current_time
-                    self.is_walking = False
-                    self.change_x = 0
-                    self.change_y = 0
+                self.random_move_cooldown = random.uniform(0.5, 2)
+
+        # по таймеру движение заканчивается
+        if self.state == 'walk' and self.move_timer >= self.random_move_duration:
+            self.state = 'idle'
+            self.change_x = 0
+            self.change_y = 0
+            self.move_timer = 0
+            self.random_move_cooldown = random.uniform(0.5, 2)
+
+        # обнов позиции
+        if self.state == 'walk':
+            self.center_x += self.change_x
+            self.center_y += self.change_y
+
+            # направление взгляда
+            if self.change_x > 0:
+                self.side = 'right'
+            elif self.change_x < 0:
+                self.side = 'left'
 
     def get_current_speed(self):
         """Возвращает текущую скорость анимации"""
-        if self.is_attacking:
+        if self.state == 'attack':
             return self.animation_speeds.get('attack', 0.05)
-        elif self.is_walking:
+        elif self.state in ['walk', 'chase']:
             return self.animation_speeds['walk']
         else:
             return self.animation_speeds['idle']
@@ -173,20 +200,17 @@ class Enemy(arcade.Sprite):
         self.animation_time += delta_time
         current_speed = self.get_current_speed()
 
-        if self.is_walking:
-            self.walk_sound_timer += delta_time
-            self.generate_interval()
-            if self.walk_sound_timer >= self.walk_sound_interval:
-                self.walk_sound_timer = 0
-
         if self.animation_time >= current_speed:
             self.animation_time = 0
             frames = self.get_current_frames()
             if not frames:
                 return
+
             self.current_frame = (self.current_frame + 1) % len(frames)
-            if self.is_attacking and self.current_frame == 0:
-                self.is_attacking = False
+
+            if self.state == 'attack' and self.current_frame == 0:
+                # атака закончилась
+                self.state = 'idle'
                 self.current_frame = 0
                 self.texture = self.idle_frames[0]
             else:
@@ -195,35 +219,9 @@ class Enemy(arcade.Sprite):
                     self.texture = self.texture.flip_horizontally()
 
     def play_attack_sound(self):
-        if not self.sound_played:
+        if self.attack_cooldown <= 0:  # звук только если нет кд
             if self.next_sound_is_sound1:
                 arcade.play_sound(self.sound1, volume=1)
             else:
                 arcade.play_sound(self.sound2, volume=1)
             self.next_sound_is_sound1 = not self.next_sound_is_sound1
-            self.sound_played = True
-
-    def attack(self):
-        """Начать атаку"""
-        if not self.is_attacking:
-            self.is_attacking = True
-            self.current_frame = 0
-            self.animation_time = 0
-            self.sound_played = False
-            self.change_x = 0
-            self.change_y = 0
-            self.is_walking = False
-            self.play_attack_sound()
-
-    def start_walking(self):
-        """Начать анимацию ходьбы"""
-        self.is_walking = True
-        self.current_frame = 0
-        self.animation_time = 0
-
-    def stop_walking(self):
-        """Остановить анимацию ходьбы"""
-        self.is_walking = False
-        self.current_frame = 0
-        self.animation_time = 0
-        self.texture = self.idle_frames[0]

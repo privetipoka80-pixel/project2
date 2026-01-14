@@ -13,7 +13,8 @@ class TheConquerorOfDungeons(arcade.View):
         color = Color.from_hex_string('181425')
         arcade.set_background_color((color[0], color[1], color[2]))
 
-        self.cell_size = 512
+        self.cell_size =  80 * 16 * TILE_SCALING // 5
+
         self.all_sprites = arcade.SpriteList()
         self.enemies = Generate_enemy()
         self.setup()
@@ -28,18 +29,18 @@ class TheConquerorOfDungeons(arcade.View):
         # )
 
         self.player = Player()
-        self.spawn_player(2, 5)
+        self.spawn_player(4, 4)
         self.all_sprites.append(self.player)
         for i in range(10):
-            self.enemies.spawn_in_grid(3, 2)
+            self.enemies.spawn_in_grid(2, 0)
         for i in range(10):
-            self.enemies.spawn_in_grid(3, 3)
+            self.enemies.spawn_in_grid(2, 2)
         for i in range(10):
-            self.enemies.spawn_in_grid(3, 5)
+            self.enemies.spawn_in_grid(2, 4)
 
         self.world_camera = Camera2D()
 
-        map_name = "assets/map1.tmx"
+        map_name = "assets/map2.tmx"
         self.tile_map = arcade.load_tilemap(map_name, scaling=TILE_SCALING)
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
 

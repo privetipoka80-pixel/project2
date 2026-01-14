@@ -1,11 +1,14 @@
 from enemy import Enemy
 import arcade
+from random import randint
+from config import TILE_SCALING
 
 
 class Generate_enemy(arcade.SpriteList):
     def __init__(self):
         super().__init__()
         self.spawn_points = []
+        self.cell_size =  80 * 16 * TILE_SCALING // 5
     
     def spawn_enemy(self, x, y):
         enemy = Enemy()
@@ -14,12 +17,8 @@ class Generate_enemy(arcade.SpriteList):
         self.append(enemy)
         return enemy
     
-    def spawn_in_grid(self, grid_x, grid_y, cell_size=512):
-        x = grid_x * cell_size + cell_size // 2 + 80
-        y = grid_y * cell_size + cell_size // 2
+    def spawn_in_grid(self, grid_x, grid_y):
+        x = grid_x * self.cell_size + self.cell_size // 2 + randint(-80, 80)
+        y = grid_y * self.cell_size + self.cell_size // 2 + randint(-80, 80)
 
         return self.spawn_enemy(x, y)
-    
-    def update_all_animations(self, delta_time):
-        for enemy in self:
-            enemy.update_animation(delta_time)

@@ -6,6 +6,7 @@ TILE_SCALING = 3
 SPEED = 1.5
 SCALE = 0.5
 CAMERA_LERP = 0.1
+TILE_SIZE = 80
 
 
 """__________MAP1__________"""
