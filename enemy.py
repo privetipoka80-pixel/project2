@@ -19,9 +19,6 @@ class Enemy(arcade.Sprite):
         self.sound2 = arcade.load_sound('assets/sounds/ATTACK2.mp3')
         self.next_sound_is_sound1 = True
 
-        self.next_sound_is_walk4 = True
-
-        self.walk_sound_timer = 0
         self.walk_sound_interval = 0.3
 
         self.frame_w = 64
@@ -43,11 +40,6 @@ class Enemy(arcade.Sprite):
         self.change_x = 0  # скорость x
         self.change_y = 0  # скорость y
         self.move_timer = 0
-        self.move_direction_timer = 0
-        self.direction_change_interval = 2.0  # менять направление каждые 2 с
-        self.current_direction = uniform(0, 6.28)
-        self.last_collision_time = 0
-        self.collision_cooldown = 0.3
         self.detection_range = 200
 
         self.state = 'idle'
