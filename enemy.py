@@ -9,6 +9,9 @@ SCALE = 1.7
 class Enemy(arcade.Sprite):
     def __init__(self):
         super().__init__(scale=SCALE)
+        self.health = 100
+        self.damag = 1
+
         self.idle_path = 'assets/enemy/enemy4.png'
         self.walk_path = 'assets/enemy/enemy3.png'
         self.attack1_path = 'assets/enemy/enemy1.png'
@@ -47,7 +50,7 @@ class Enemy(arcade.Sprite):
         self.random_move_cooldown = 0
         self.attack_cooldown = 0
         self.random_move_chance = 0.03
-        self.attack_cooldown_time = 1
+        self.attack_cooldown_time = 2
         self.random_move_duration = 2
         self.chase_speed = 1.5
         self.attack_range = 50
@@ -99,13 +102,12 @@ class Enemy(arcade.Sprite):
         distance_sq = dx * dx + dy * dy
 
         if distance_sq < self.attack_range * self.attack_range:
-            self.state = 'attack'
-            self.change_x = 0
-            self.change_y = 0
-
-            if self.attack_cooldown <= 0:
+            if self.state != 'attack' and self.attack_cooldown <= 0:
+                self.state = 'attack'
                 self.play_attack_sound()
                 self.attack_cooldown = self.attack_cooldown_time
+            self.change_x = 0
+            self.change_y = 0
         elif distance_sq < self.detection_range * self.detection_range:
             distance = math.sqrt(distance_sq)
             self.state = 'chase'
@@ -137,6 +139,11 @@ class Enemy(arcade.Sprite):
                 self.side = 'right'
             elif self.change_x < 0:
                 self.side = 'left'
+
+    def damag_to_enemy(self, player):
+        """"Нанесение урона главному герою"""
+        if arcade.check_for_collision(self, player) and self.state == 'attack':
+            return True
 
     def random_walk(self, delta_time):
         """Случайное блуждание"""
@@ -202,9 +209,10 @@ class Enemy(arcade.Sprite):
 
             if self.state == 'attack' and self.current_frame == 0:
                 # атака закончилась
-                self.state = 'idle'
-                self.current_frame = 0
-                self.texture = self.idle_frames[0]
+                if self.attack_cooldown <= 0:
+                    self.state = 'idle'
+                    self.current_frame = 0
+                    self.texture = self.idle_frames[0]
             else:
                 self.texture = frames[self.current_frame]
                 if self.side == 'left':
