@@ -54,6 +54,10 @@ class Player(arcade.Sprite):
 
         self.sound_played = False
         self.sound_played2 = False
+        self.w_pressed = False
+        self.a_pressed = False
+        self.s_pressed = False
+        self.d_pressed = False
 
     def load_animations(self):
         """Загружает все анимации персонажа"""

@@ -13,7 +13,7 @@ class TheConquerorOfDungeons(arcade.View):
         color = Color.from_hex_string('181425')
         arcade.set_background_color((color[0], color[1], color[2]))
 
-        self.cell_size =  80 * 16 * TILE_SCALING // 5
+        self.cell_size = 80 * 16 * TILE_SCALING // 5
 
         self.all_sprites = arcade.SpriteList()
         self.enemies = Generate_enemy()
@@ -110,35 +110,41 @@ class TheConquerorOfDungeons(arcade.View):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
+            self.player.w_pressed = True
             self.player.change_y = SPEED
-            self.player.is_walking = True
         if key == arcade.key.S:
+            self.player.s_pressed = True
             self.player.change_y = -SPEED
-            self.player.is_walking = True
         if key == arcade.key.D:
+            self.player.d_pressed = True
             self.player.side = 'right'
             self.player.change_x = SPEED
-            self.player.is_walking = True
         if key == arcade.key.A:
+            self.player.a_pressed = True
             self.player.side = 'left'
             self.player.change_x = -SPEED
-            self.player.is_walking = True
-
         if key == arcade.key.K:
             self.player.attack()
 
+        self.player.is_walking = True
+
     def on_key_release(self, key, modifiers):
-        # print(self.player.position)
         if key == arcade.key.W:
-            self.player.change_y = 0
+            self.player.w_pressed = False
+            self.player.change_y = -SPEED if self.player.s_pressed else 0
         if key == arcade.key.S:
-            self.player.change_y = 0
+            self.player.s_pressed = False
+            self.player.change_y = SPEED if self.player.w_pressed else 0
         if key == arcade.key.D:
-            self.player.side = 'right'
-            self.player.change_x = 0
+            self.player.d_pressed = False
+            self.player.change_x = -SPEED if self.player.a_pressed else 0
+            if self.player.change_x < 0:
+                self.player.side = 'left'
         if key == arcade.key.A:
-            self.player.side = 'left'
-            self.player.change_x = 0
+            self.player.a_pressed = False
+            self.player.change_x = SPEED if self.player.d_pressed else 0
+            if self.player.change_x > 0:
+                self.player.side = 'right'
 
         if self.player.change_x == 0 and self.player.change_y == 0:
             self.player.is_walking = False

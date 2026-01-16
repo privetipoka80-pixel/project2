@@ -3,7 +3,7 @@ from random import uniform, random
 import time
 import random
 import math
-SCALE = 2
+SCALE = 1.7
 
 
 class Enemy(arcade.Sprite):
