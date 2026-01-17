@@ -137,7 +137,7 @@ class PauseView(arcade.View):
         main_menu_button.on_click = self.main_menu
         self.box_layout.add(main_menu_button)
 
-    def continue_play(self, event):
+    def continue_game(self, event):
         self.window.show_view(self.game_view)
 
     def main_menu(self, event):
@@ -146,7 +146,7 @@ class PauseView(arcade.View):
 
     def on_key_press(self, symbol, modifiers):
         if symbol == arcade.key.ESCAPE:
-            arcade.exit()
+            self.window.show_view(self.game_view)
 
     def on_draw(self):
         self.clear()
