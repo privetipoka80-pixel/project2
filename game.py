@@ -127,6 +127,11 @@ class TheConquerorOfDungeons(arcade.View):
         if key == arcade.key.K:
             self.player.attack()
 
+        if key == arcade.key.ESCAPE:
+            from menu import PauseView
+            pause_view = PauseView(self)
+            self.window.show_view(pause_view)
+
     def on_key_release(self, key, modifiers):
         # print(self.player.position)
         if key == arcade.key.W:
