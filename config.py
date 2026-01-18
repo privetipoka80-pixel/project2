@@ -18,6 +18,10 @@ PLAYER_DAMAG = 100
 ENEMY_HEALTH = 100
 ENEMY_DAMAG = 5
 
+"""__________BOSS__________"""
+BOSS_HEALTH = 500
+BOSS_DAMAG = 25
+
 
 """__________MAP1__________"""
 

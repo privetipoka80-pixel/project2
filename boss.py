@@ -1,16 +1,17 @@
+from config import BOSS_DAMAG, BOSS_HEALTH
 import arcade
 from random import uniform, random
 import time
 import random
 import math
-SCALE = 1.7
-from config import ENEMY_HEALTH, ENEMY_DAMAG
+SCALE = 4
 
-class Enemy(arcade.Sprite):
+
+class Boss(arcade.Sprite):
     def __init__(self):
         super().__init__(scale=SCALE)
-        self.health = ENEMY_HEALTH
-        self.damag = ENEMY_DAMAG
+        self.health = BOSS_HEALTH
+        self.damag = BOSS_DAMAG
 
         self.idle_path = 'assets/enemy/enemy4.png'
         self.walk_path = 'assets/enemy/enemy3.png'
@@ -120,7 +121,7 @@ class Enemy(arcade.Sprite):
                 self.state = 'attack'
                 self.play_attack_sound()
                 self.attack_cooldown = self.attack_cooldown_time
-                self.damage_dealt_in_attack = False 
+                self.damage_dealt_in_attack = False
             self.change_x = 0
             self.change_y = 0
         elif distance_sq < self.detection_range * self.detection_range:

@@ -30,9 +30,12 @@ class TheConquerorOfDungeons(arcade.View):
             for _ in range(10):
                 self.enemies.spawn_in_grid(x, y)
 
-        self.tile_map1 = arcade.load_tilemap(self.maps[0], scaling=TILE_SCALING)
-        self.tile_map2 = arcade.load_tilemap(self.maps[1], scaling=TILE_SCALING)
-        self.tile_map3 = arcade.load_tilemap(self.maps[2], scaling=TILE_SCALING)
+        self.tile_map1 = arcade.load_tilemap(
+            self.maps[0], scaling=TILE_SCALING)
+        self.tile_map2 = arcade.load_tilemap(
+            self.maps[1], scaling=TILE_SCALING)
+        self.tile_map3 = arcade.load_tilemap(
+            self.maps[2], scaling=TILE_SCALING)
 
         self.scene1 = arcade.Scene.from_tilemap(self.tile_map1)
         self.scene2 = arcade.Scene.from_tilemap(self.tile_map2)
@@ -40,8 +43,9 @@ class TheConquerorOfDungeons(arcade.View):
 
         self.tile_map = self.tile_map1
         self.scene = self.scene1
-        self.setup()
 
+        self.enemies.spawn_boss_in_grid(x, y)
+        self.setup()
 
     def setup(self):
         self.background_music = arcade.load_sound('assets/sounds/MUSIC.mp3')
@@ -127,7 +131,8 @@ class TheConquerorOfDungeons(arcade.View):
                 self.next_level()
 
         if self.player.health <= 0:
-            self.spawn_player(MAP1_SPAWN_PLAYER_COORD[0], MAP1_SPAWN_PLAYER_COORD[1])
+            self.spawn_player(
+                MAP1_SPAWN_PLAYER_COORD[0], MAP1_SPAWN_PLAYER_COORD[1])
             self.player.health = PLAYER_HEALTH
             self.tile_map = self.tile_map1
             self.scene = self.scene1
@@ -198,7 +203,7 @@ class TheConquerorOfDungeons(arcade.View):
 
     def next_level(self):
         self.spawn_player(self.coords_player[0], self.coords_player[1])
-        
+
         for x, y in self.coords_enemy:
             for _ in range(10):
                 self.enemies.spawn_in_grid(x, y)
