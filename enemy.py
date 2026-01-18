@@ -123,18 +123,19 @@ class Enemy(arcade.Sprite):
             self.change_x = 0
             self.change_y = 0
         elif distance_sq < self.detection_range * self.detection_range:
-            distance = math.sqrt(distance_sq)
-            self.state = 'chase'
-            self.change_x = (dx / distance) * self.chase_speed
-            self.change_y = (dy / distance) * self.chase_speed
+            if self.state != 'dead':
+                distance = math.sqrt(distance_sq)
+                self.state = 'chase'
+                self.change_x = (dx / distance) * self.chase_speed
+                self.change_y = (dy / distance) * self.chase_speed
 
-            self.center_x += self.change_x
-            self.center_y += self.change_y
+                self.center_x += self.change_x
+                self.center_y += self.change_y
 
-            if self.change_x > 0:
-                self.side = 'right'
-            elif self.change_x < 0:
-                self.side = 'left'
+                if self.change_x > 0:
+                    self.side = 'right'
+                elif self.change_x < 0:
+                    self.side = 'left'
         else:
             self.random_walk(delta_time)
 
