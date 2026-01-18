@@ -15,7 +15,7 @@ class Enemy(arcade.Sprite):
         self.idle_path = 'assets/enemy/enemy4.png'
         self.walk_path = 'assets/enemy/enemy3.png'
         self.attack1_path = 'assets/enemy/enemy1.png'
-        self.attack2_path = 'assets/enemy/enemy2.png'
+        self.dead_path = 'assets/enemy/enemy2.png'
         self.attack3_path = 'assets/enemy/enemy5.png'
 
         self.sound1 = arcade.load_sound('assets/sounds/ATTACK1.mp3')
@@ -36,7 +36,8 @@ class Enemy(arcade.Sprite):
         self.animation_speeds = {
             'idle': 0.15,
             'walk': 0.05,
-            'attack': 0.05
+            'attack': 0.05,
+            'dead': 0.25
         }
 
         self.speed = 1.5
@@ -56,6 +57,7 @@ class Enemy(arcade.Sprite):
         self.attack_range = 50
 
         self.damage_dealt_in_attack = False
+        self.is_dead = False
 
     def load_animations(self):
         """Загружает все анимации врага"""
@@ -83,12 +85,21 @@ class Enemy(arcade.Sprite):
                 i * self.frame_w, 0, self.frame_w, self.frame_h)
             self.attack_frames.append(frame)
 
+        dead_texture = arcade.load_texture(self.dead_path)
+        self.dead_frames = []
+        for i in range(6):
+            frame = dead_texture.crop(
+                i * self.frame_w, 0, self.frame_w, self.frame_h)
+            self.dead_frames.append(frame)
+
     def get_current_frames(self):
         """Возвращает текущие кадры анимации"""
         if self.state == 'attack':
             return self.attack_frames
         elif self.state in ['walk', 'chase']:
             return self.walk_frames
+        elif self.state == 'dead':
+            return self.dead_frames
         return self.idle_frames
 
     def update_ai(self, player, delta_time, wall_list=None):
@@ -191,9 +202,11 @@ class Enemy(arcade.Sprite):
     def get_current_speed(self):
         """Возвращает текущую скорость анимации"""
         if self.state == 'attack':
-            return self.animation_speeds.get('attack', 0.05)
+            return self.animation_speeds['attack']
         elif self.state in ['walk', 'chase']:
             return self.animation_speeds['walk']
+        elif self.state == 'dead':
+            return self.animation_speeds['dead']
         else:
             return self.animation_speeds['idle']
 
@@ -220,10 +233,16 @@ class Enemy(arcade.Sprite):
                     self.current_frame = 0
                     self.texture = self.idle_frames[0]
                     self.damage_dealt_in_attack = False
+            elif self.state == 'dead' and self.current_frame == 0:
+                self.texture = self.dead_frames[0]
+                self.is_dead = True
             else:
                 self.texture = frames[self.current_frame]
                 if self.side == 'left':
                     self.texture = self.texture.flip_horizontally()
+
+        if self.health <= 0:
+            self.state = 'dead'
 
     def play_attack_sound(self):
         if self.attack_cooldown <= 0:  # звук только если нет кд
