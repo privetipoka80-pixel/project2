@@ -170,6 +170,10 @@ class TheConquerorOfDungeons(arcade.View):
             self.player.attack()
 
         self.player.is_walking = True
+        if key == arcade.key.ESCAPE:
+            from menu import PauseView
+            pause_view = PauseView(self)
+            self.window.show_view(pause_view)
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.W:
