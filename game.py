@@ -17,7 +17,31 @@ class TheConquerorOfDungeons(arcade.View):
 
         self.all_sprites = arcade.SpriteList()
         self.enemies = Generate_enemy()
+
+        self.maps = ["assets/map1.tmx", "assets/map2.tmx", "assets/map3.tmx"]
+        self.map_name = "assets/map1.tmx"
+        self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
+        self.coords_player = MAP1_SPAWN_PLAYER_COORD
+        self.lvl = 1
+        self.player = Player()
+        self.all_sprites.append(self.player)
+
+        for x, y in self.coords_enemy:
+            for _ in range(10):
+                self.enemies.spawn_in_grid(x, y)
+
+        self.tile_map1 = arcade.load_tilemap(self.maps[0], scaling=TILE_SCALING)
+        self.tile_map2 = arcade.load_tilemap(self.maps[1], scaling=TILE_SCALING)
+        self.tile_map3 = arcade.load_tilemap(self.maps[2], scaling=TILE_SCALING)
+
+        self.scene1 = arcade.Scene.from_tilemap(self.tile_map1)
+        self.scene2 = arcade.Scene.from_tilemap(self.tile_map2)
+        self.scene3 = arcade.Scene.from_tilemap(self.tile_map3)
+
+        self.tile_map = self.tile_map1
+        self.scene = self.scene1
         self.setup()
+
 
     def setup(self):
         self.background_music = arcade.load_sound('assets/sounds/MUSIC.mp3')
@@ -28,21 +52,8 @@ class TheConquerorOfDungeons(arcade.View):
         #     loop=True
         # )
 
-        self.player = Player()
-        self.spawn_player(4, 4)
-        self.all_sprites.append(self.player)
-        for i in range(10):
-            self.enemies.spawn_in_grid(2, 0)
-        for i in range(10):
-            self.enemies.spawn_in_grid(2, 2)
-        for i in range(10):
-            self.enemies.spawn_in_grid(2, 4)
-
+        self.spawn_player(self.coords_player[0], self.coords_player[1])
         self.world_camera = Camera2D()
-
-        map_name = "assets/map2.tmx"
-        self.tile_map = arcade.load_tilemap(map_name, scaling=TILE_SCALING)
-        self.scene = arcade.Scene.from_tilemap(self.tile_map)
 
         self.wall_list = self.tile_map.sprite_lists["walls"]
         self.torches_list = self.tile_map.sprite_lists["torches"]
@@ -105,6 +116,15 @@ class TheConquerorOfDungeons(arcade.View):
                 enemy.health -= self.player.damag
 
         print(self.player.health)
+        if not self.enemies:
+            self.tile_map = self.tile_map2
+            self.scene = self.scene2
+            self.lvl += 1
+            if self.lvl == 2:
+                self.map_name = self.maps[1]
+                self.coords_enemy = MAP2_SPAWN_ENEMY_COORD
+                self.coords_player = MAP2_SPAWN_PLAYER_COORD
+                self.next_level()
 
         if self.player.health <= 0:
             self.all_sprites.remove(self.player)
@@ -172,3 +192,19 @@ class TheConquerorOfDungeons(arcade.View):
         if self.player.change_x == 0 and self.player.change_y == 0:
             self.player.is_walking = False
             self.player.curr_texture_index = 0
+
+    def next_level(self):
+        self.spawn_player(self.coords_player[0], self.coords_player[1])
+        
+        for x, y in self.coords_enemy:
+            for _ in range(10):
+                self.enemies.spawn_in_grid(x, y)
+
+        self.physics_engine = arcade.PhysicsEngineSimple(
+            self.player, self.wall_list)
+        self.physics_engine2 = arcade.PhysicsEngineSimple(
+            self.player, self.details_list)
+
+        self.world_camera.position = self.player.position
+
+        self.setup()

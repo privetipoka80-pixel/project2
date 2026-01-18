@@ -11,7 +11,7 @@ TILE_SIZE = 80
 
 """__________PLAYER__________"""
 PLAYER_HEALTH = 500
-PLAYER_DAMAG = 34
+PLAYER_DAMAG = 100
 
 
 """__________ENEMY__________"""
@@ -21,5 +21,11 @@ ENEMY_DAMAG = 5
 
 """__________MAP1__________"""
 
-MAP1_START_X = 2
-MAP1_START_Y = 5
+MAP1_SPAWN_PLAYER_COORD = (0, 4)
+MAP1_SPAWN_ENEMY_COORD = ((0, 0), (0, 2))
+
+
+"""__________MAP2__________"""
+
+MAP2_SPAWN_PLAYER_COORD = (4, 4)
+MAP2_SPAWN_ENEMY_COORD = ((2, 0), (2, 2), (2, 4))
