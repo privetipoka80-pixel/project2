@@ -58,6 +58,7 @@ class TheConquerorOfDungeons(arcade.View):
 
         self.spawn_player(self.coords_player[0], self.coords_player[1])
         self.world_camera = Camera2D()
+        self.ui_camera = Camera2D()
 
         self.wall_list = self.tile_map.sprite_lists["walls"]
         self.torches_list = self.tile_map.sprite_lists["torches"]
@@ -92,11 +93,14 @@ class TheConquerorOfDungeons(arcade.View):
     def on_draw(self):
         """Отрисовка кадра"""
         self.clear()
+        self.world_camera.use()
         self.scene.draw(pixelated=True)
         self.all_sprites.draw(pixelated=True)
         self.torches.draw(pixelated=True)
-        self.world_camera.use()
         self.enemies.draw(pixelated=True)
+
+        self.ui_camera.use()
+        self.draw_hp_bar()
 
     def on_update(self, delta_time):
         """Обновление логики игры"""
@@ -155,24 +159,38 @@ class TheConquerorOfDungeons(arcade.View):
             for torch in self.torches:
                 torch.texture = self.torch_frames[self.current_frame]
 
+    def draw_hp_bar(self):
+        hp_ratio = max(0, self.player.health / self.player.max_health)
+
+        bar_w = 300
+        bar_h = 20
+        x = 20
+        y = self.window.height - 40
+        arcade.draw_lbwh_rectangle_filled(
+            x, y, bar_w, bar_h, arcade.color.DARK_RED)
+        arcade.draw_lbwh_rectangle_filled(
+            x, y, bar_w * hp_ratio, bar_h, arcade.color.RED)
+        arcade.draw_lrbt_rectangle_outline(
+            x, x + bar_w, y, y + bar_h, arcade.color.BLACK, 2)
+
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.W:
-            self.player.w_pressed = True
-            self.player.change_y = SPEED
-        if key == arcade.key.S:
-            self.player.s_pressed = True
-            self.player.change_y = -SPEED
-        if key == arcade.key.D:
-            self.player.d_pressed = True
-            self.player.side = 'right'
-            self.player.change_x = SPEED
-        if key == arcade.key.A:
-            self.player.a_pressed = True
-            self.player.side = 'left'
-            self.player.change_x = -SPEED
+        if key == arcade.key.W or key == arcade.key.S or key == arcade.key.A or key == arcade.key.D:
+            if key == arcade.key.W:
+                self.player.w_pressed = True
+                self.player.change_y = SPEED
+            if key == arcade.key.S:
+                self.player.s_pressed = True
+                self.player.change_y = -SPEED
+            if key == arcade.key.D:
+                self.player.d_pressed = True
+                self.player.side = 'right'
+                self.player.change_x = SPEED
+            if key == arcade.key.A:
+                self.player.a_pressed = True
+                self.player.side = 'left'
+                self.player.change_x = -SPEED
         if key == arcade.key.K:
             self.player.attack()
-
         self.player.is_walking = True
         if key == arcade.key.ESCAPE:
             from menu import PauseView
@@ -200,6 +218,9 @@ class TheConquerorOfDungeons(arcade.View):
         if self.player.change_x == 0 and self.player.change_y == 0:
             self.player.is_walking = False
             self.player.curr_texture_index = 0
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        pass
 
     def next_level(self):
         self.spawn_player(self.coords_player[0], self.coords_player[1])

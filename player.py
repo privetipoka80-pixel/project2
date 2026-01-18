@@ -10,6 +10,7 @@ class Player(arcade.Sprite):
         super().__init__(scale=SCALE)
         self.health = PLAYER_HEALTH
         self.damag = PLAYER_DAMAG
+        self.max_health = PLAYER_HEALTH
 
         self.hit_box_algoritm = 'Detailed'
 

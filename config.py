@@ -12,6 +12,10 @@ TILE_SIZE = 80
 """__________PLAYER__________"""
 PLAYER_HEALTH = 500
 PLAYER_DAMAG = 100
+HP_BAR_WIDTH = 300
+HP_BAR_HEIGHT = 20
+HP_BAR_MARGIN = 20
+
 
 
 """__________ENEMY__________"""
