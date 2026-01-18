@@ -106,6 +106,20 @@ class TheConquerorOfDungeons(arcade.View):
 
         print(self.player.health)
 
+        if self.player.health <= 0:
+            self.all_sprites.remove(self.player)
+            self.player = Player()
+            self.spawn_player(4, 4)
+            self.all_sprites.append(self.player)
+            self.player.health = PLAYER_HEALTH
+
+            self.physics_engine = arcade.PhysicsEngineSimple(
+                self.player, self.wall_list)
+            self.physics_engine2 = arcade.PhysicsEngineSimple(
+                self.player, self.details_list)
+
+            self.world_camera.position = self.player.position
+
         self.player.update_animation(delta_time)
         self.animation_timer += delta_time
 
