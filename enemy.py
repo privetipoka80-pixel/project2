@@ -4,13 +4,13 @@ import time
 import random
 import math
 SCALE = 1.7
-
+from config import ENEMY_HEALTH, ENEMY_DAMAG
 
 class Enemy(arcade.Sprite):
     def __init__(self):
         super().__init__(scale=SCALE)
-        self.health = 100
-        self.damag = 1
+        self.health = ENEMY_HEALTH
+        self.damag = ENEMY_DAMAG
 
         self.idle_path = 'assets/enemy/enemy4.png'
         self.walk_path = 'assets/enemy/enemy3.png'
@@ -54,6 +54,8 @@ class Enemy(arcade.Sprite):
         self.random_move_duration = 2
         self.chase_speed = 1.5
         self.attack_range = 50
+
+        self.damage_dealt_in_attack = False
 
     def load_animations(self):
         """Загружает все анимации врага"""
@@ -106,6 +108,7 @@ class Enemy(arcade.Sprite):
                 self.state = 'attack'
                 self.play_attack_sound()
                 self.attack_cooldown = self.attack_cooldown_time
+                self.damage_dealt_in_attack = False 
             self.change_x = 0
             self.change_y = 0
         elif distance_sq < self.detection_range * self.detection_range:
@@ -143,7 +146,10 @@ class Enemy(arcade.Sprite):
     def damag_to_enemy(self, player):
         """"Нанесение урона главному герою"""
         if arcade.check_for_collision(self, player) and self.state == 'attack':
-            return True
+            if not self.damage_dealt_in_attack:
+                self.damage_dealt_in_attack = True
+                return True
+        return False
 
     def random_walk(self, delta_time):
         """Случайное блуждание"""
@@ -213,6 +219,7 @@ class Enemy(arcade.Sprite):
                     self.state = 'idle'
                     self.current_frame = 0
                     self.texture = self.idle_frames[0]
+                    self.damage_dealt_in_attack = False
             else:
                 self.texture = frames[self.current_frame]
                 if self.side == 'left':

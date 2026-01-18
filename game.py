@@ -98,7 +98,13 @@ class TheConquerorOfDungeons(arcade.View):
             enemy.update_animation(delta_time)
             if enemy.damag_to_enemy(self.player):
                 self.player.health -= enemy.damag
-        # print(self.player.health)
+            if enemy.health <= 0:
+                self.enemies.remove(enemy)
+
+            if self.player.damag_to_player(enemy):
+                enemy.health -= self.player.damag
+
+        print(self.player.health)
 
         self.player.update_animation(delta_time)
         self.animation_timer += delta_time

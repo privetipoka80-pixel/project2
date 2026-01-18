@@ -9,6 +9,16 @@ CAMERA_LERP = 0.1
 TILE_SIZE = 80
 
 
+"""__________PLAYER__________"""
+PLAYER_HEALTH = 500
+PLAYER_DAMAG = 34
+
+
+"""__________ENEMY__________"""
+ENEMY_HEALTH = 100
+ENEMY_DAMAG = 5
+
+
 """__________MAP1__________"""
 
 MAP1_START_X = 2

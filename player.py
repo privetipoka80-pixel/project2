@@ -1,6 +1,6 @@
 import arcade
 from random import uniform
-
+from config import PLAYER_DAMAG, PLAYER_HEALTH
 
 SCALE = 2
 
@@ -8,8 +8,8 @@ SCALE = 2
 class Player(arcade.Sprite):
     def __init__(self):
         super().__init__(scale=SCALE)
-        self.health = 10000
-        self.harm = 50
+        self.health = PLAYER_HEALTH
+        self.damag = PLAYER_DAMAG
 
         self.hit_box_algoritm = 'Detailed'
 
@@ -61,6 +61,8 @@ class Player(arcade.Sprite):
         self.a_pressed = False
         self.s_pressed = False
         self.d_pressed = False
+
+        self.damage_dealt_in_attack = False
 
     def load_animations(self):
         """Загружает все анимации персонажа"""
@@ -159,6 +161,7 @@ class Player(arcade.Sprite):
                 self.current_attack = None
                 self.current_frame = 0
                 self.texture = self.idle_frames[0]
+                self.damage_dealt_in_attack = False
             else:
                 self.texture = frames[self.current_frame]
                 if self.side == 'left':
@@ -172,6 +175,14 @@ class Player(arcade.Sprite):
                 arcade.play_sound(self.sound2, volume=1)
             self.next_sound_is_sound1 = not self.next_sound_is_sound1
             self.sound_played = True
+
+    def damag_to_player(self, enemy):
+        """"Нанесение урона главному по врагам"""
+        if arcade.check_for_collision(self, enemy) and self.is_attacking:
+            if not self.damage_dealt_in_attack:
+                self.damage_dealt_in_attack = True
+                return True
+        return False
 
     def play_walk_sound(self):
         if self.next_sound_is_walk4:
