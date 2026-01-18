@@ -127,11 +127,10 @@ class TheConquerorOfDungeons(arcade.View):
                 self.next_level()
 
         if self.player.health <= 0:
-            self.all_sprites.remove(self.player)
-            self.player = Player()
-            self.spawn_player(4, 4)
-            self.all_sprites.append(self.player)
+            self.spawn_player(MAP1_SPAWN_PLAYER_COORD[0], MAP1_SPAWN_PLAYER_COORD[1])
             self.player.health = PLAYER_HEALTH
+            self.tile_map = self.tile_map1
+            self.scene = self.scene1
 
             self.physics_engine = arcade.PhysicsEngineSimple(
                 self.player, self.wall_list)
