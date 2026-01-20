@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="80" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
+ <tileset firstgid="1" source="boss_map_set.tsx"/>
+ <layer id="1" name="walls" width="80" height="80">
+  <data encoding="base64" compression="zlib">
+   eJzt1cEJwkAUhOE0YdQOPNiBBzvwYAdq7L8F9yIswSwrz/Bm5P8gJMaAa5jZNwwAAAAAAAAAAABo2ZRjLMe2Ou+q8zi7v3Td83n+G0u/977er/i/f+WQvYCGY/YCOpyyF9Bwzl5AB+X8XbMX0EE5fw79vWQvoIH+xtDfGPobQ39jHPKn3F+H/Cn312F+KPfXIX/K/XXY/8hfjHL+HPY/5fnh0F/l/Dn0l/zFkL8Y5fnrMD+U8+fw/tj/YpT767D/0d8Y5f6SvxiH/Y/8xSjPD4f8KfeX/MU4zF/l9+eQP+X+OuRPef46zA/6G0N/Y5Tz59Bf5fw59Fd5fjj091aOezke1Xn6cK/+bv7M1PnMt9fPFf83AAAAAAAAAADAv3gBqeok4w==
+  </data>
+ </layer>
+ <layer id="2" name="floor" width="80" height="80">
+  <data encoding="base64" compression="zlib">
+   eJztmuFt21AMhN86tVZwvELaldoZmhnaGdrhKgEh8PlylPMnaFncAYQcW5LzTkfyHpO1giAIgiAIgiAIgiAIgiAIgiAIguBjcdlj+wePU/C0x+31+H2PF/ysx0sTW3P+7eSaR/eZAj73H3v8XP36nhBnHHTXuOupuYn643P/tcfv1a+Zmuo42XA/XnNb99zq623d63YKXN7Va3KhOcxzyIEGz70sr93i7rZm60/1csR13a+/44rnqZ6cTllvJ9e/ru4XD897fF5v9UfN3OQ8ck1OVeNab6fXP10nudAc3tY9T10vVU1Sp6y3/4v+yKGr72c92fWSMz1rjvO7poB584hD52Gcz2Me8tnwHlX7tNfUNVOgNUk5ZHQepvOA1+aeB3esfdT2VP05/1JRWlH/UkGeyGHlqubxwZ2rfawTU+DqH18f3JRWqEFyWjyd7c34XIo756nrvSlw9Y/74IObWi+1Wpxq7ne5fOaTWAun9t9jjbUO9WUuN4vTT+uen+58t4/TffdU/1drrnVQb8w7t387XheH2mNUj643XfB9U/VX69S6pP1WPUy9T0/sdOZ4P/NI0/Sn3qWbGyin9Vn1jy+vR/3che6r9TunQLlzM9RunkJev+7xbXkvo8+GnKtvnqy/8mb0KtxnufmW8v68+r2d5q3OrKbr79AOa6Cu0c1U2DvYi880qLWv9iQva67+OIPqZjKOF56nufuIQ2qvdD9Vf/RutV7WQu4NVDtaH7XXuP6rvUM9+hRoPjJPSxPk0fVN6qnTW9fn1bdM1p+uszTBnsIcZ766nHV/F+B56iunz184E+Ba2VOYwzo3UO7UQ17XW261BtTvMAVcn9Zw5YO52/lj8qF7EHo+NzOlf5oCaoEzuVpP1fQjVG/qp5UPHtW7lM50Dl2/wxQ4L9zlmdOZ9oizIIelMzd7mVb/tJa7vZXu5R7x5HoKo3TG2Qu1OwX0G90ew+23XN3TXus8zJl3ZExBl5PdvE5nTl1+unvoM1HvyJgC9WY6V3nEI2ulemPn/ciR+iXefwrc+tS/OX3VWp0n0fsVx93+xt17Cpy/ZW65OuXmAC7qHP2fA/Uq0+tf8aT/A9Tx5Hpt12u6mZ/yOrX+UV+6l3/P8b1adPWv894T9af9428eJ+kvCIIgCIIgCIIgCIIgCIIgCIIgmIs/FltfBQ==
+  </data>
+ </layer>
+</map>

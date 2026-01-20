@@ -19,7 +19,7 @@ class TheConquerorOfDungeons(arcade.View):
         self.enemies = Generate_enemy()
 
         self.maps = ["assets/map1.tmx", "assets/map2.tmx", "assets/map3.tmx"]
-        self.map_name = "assets/map1.tmx"
+        self.boss_map = "assets/boss_map.tmx"
         self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
         self.coords_player = MAP1_SPAWN_PLAYER_COORD
         self.lvl = 0
@@ -36,15 +36,17 @@ class TheConquerorOfDungeons(arcade.View):
             self.maps[1], scaling=TILE_SCALING)
         self.tile_map3 = arcade.load_tilemap(
             self.maps[2], scaling=TILE_SCALING)
+        self.boss_map = arcade.load_tilemap(
+            self.boss_map, scaling=TILE_SCALING)
 
         self.scene1 = arcade.Scene.from_tilemap(self.tile_map1)
         self.scene2 = arcade.Scene.from_tilemap(self.tile_map2)
         self.scene3 = arcade.Scene.from_tilemap(self.tile_map3)
+        self.scene4 = arcade.Scene.from_tilemap(self.boss_map)
 
         self.tile_map = self.tile_map1
         self.scene = self.scene1
 
-        self.enemies.spawn_boss_in_grid(x, y)
         self.setup()
 
     def setup(self):
@@ -127,30 +129,32 @@ class TheConquerorOfDungeons(arcade.View):
         if not self.enemies:
             self.lvl += 1
             if self.lvl == 1:
-                self.map_name = self.maps[0]
                 self.tile_map = self.tile_map1
                 self.scene = self.scene1
                 self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
                 self.coords_player = MAP1_SPAWN_PLAYER_COORD
             if self.lvl == 2:
-                self.map_name = self.maps[1]
                 self.tile_map = self.tile_map2
                 self.scene = self.scene2
                 self.coords_enemy = MAP2_SPAWN_ENEMY_COORD
                 self.coords_player = MAP2_SPAWN_PLAYER_COORD
                 self.next_level()
             if self.lvl == 3:
-                self.map_name = self.maps[2]
                 self.tile_map = self.tile_map3
                 self.scene = self.scene3
                 self.coords_enemy = MAP3_SPAWN_ENEMY_COORD
                 self.coords_player = MAP3_SPAWN_PLAYER_COORD
                 self.next_level()
+            if self.lvl == 4:
+                self.tile_map = self.boss_map
+                self.scene = self.scene4
+                self.spawn_player(1, 1)
+                self.enemies.spawn_boss_in_grid(2, 2)
+                self.player.health = self.player.max_health
 
         if self.player.health <= 0:
             self.lvl = 0
             self.enemies.clear()
-            self.map_name = self.maps[0]
             self.tile_map = self.tile_map1
             self.scene = self.scene1
             self.coords_player = MAP1_SPAWN_PLAYER_COORD
