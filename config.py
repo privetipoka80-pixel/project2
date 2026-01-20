@@ -17,7 +17,6 @@ HP_BAR_HEIGHT = 20
 HP_BAR_MARGIN = 20
 
 
-
 """__________ENEMY__________"""
 ENEMY_HEALTH = 100
 ENEMY_DAMAG = 5
@@ -37,3 +36,8 @@ MAP1_SPAWN_ENEMY_COORD = ((0, 0), (0, 2))
 
 MAP2_SPAWN_PLAYER_COORD = (4, 4)
 MAP2_SPAWN_ENEMY_COORD = ((2, 0), (2, 2), (2, 4))
+
+"""__________MAP3__________"""
+
+MAP3_SPAWN_PLAYER_COORD = (0, 0)
+MAP3_SPAWN_ENEMY_COORD = ((0, 2), (2, 2), (2, 4), (4, 2))

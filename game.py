@@ -22,7 +22,7 @@ class TheConquerorOfDungeons(arcade.View):
         self.map_name = "assets/map1.tmx"
         self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
         self.coords_player = MAP1_SPAWN_PLAYER_COORD
-        self.lvl = 1
+        self.lvl = 0
         self.player = Player()
         self.all_sprites.append(self.player)
 
@@ -125,21 +125,41 @@ class TheConquerorOfDungeons(arcade.View):
 
         print(self.player.health)
         if not self.enemies:
-            self.tile_map = self.tile_map2
-            self.scene = self.scene2
             self.lvl += 1
+            if self.lvl == 1:
+                self.map_name = self.maps[0]
+                self.tile_map = self.tile_map1
+                self.scene = self.scene1
+                self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
+                self.coords_player = MAP1_SPAWN_PLAYER_COORD
             if self.lvl == 2:
                 self.map_name = self.maps[1]
+                self.tile_map = self.tile_map2
+                self.scene = self.scene2
                 self.coords_enemy = MAP2_SPAWN_ENEMY_COORD
                 self.coords_player = MAP2_SPAWN_PLAYER_COORD
                 self.next_level()
+            if self.lvl == 3:
+                self.map_name = self.maps[2]
+                self.tile_map = self.tile_map3
+                self.scene = self.scene3
+                self.coords_enemy = MAP3_SPAWN_ENEMY_COORD
+                self.coords_player = MAP3_SPAWN_PLAYER_COORD
+                self.next_level()
 
         if self.player.health <= 0:
-            self.spawn_player(
-                MAP1_SPAWN_PLAYER_COORD[0], MAP1_SPAWN_PLAYER_COORD[1])
-            self.player.health = PLAYER_HEALTH
+            self.lvl = 0
+            self.enemies.clear()
+            self.map_name = self.maps[0]
             self.tile_map = self.tile_map1
             self.scene = self.scene1
+            self.coords_player = MAP1_SPAWN_PLAYER_COORD
+            self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
+            for x, y in self.coords_enemy:
+                for _ in range(10):
+                    self.enemies.spawn_in_grid(x, y)
+            self.spawn_player(self.coords_player[0], self.coords_player[1])
+            self.player.health = PLAYER_HEALTH
 
             self.physics_engine = arcade.PhysicsEngineSimple(
                 self.player, self.wall_list)
