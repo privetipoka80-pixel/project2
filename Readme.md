@@ -27,6 +27,10 @@ The game ends after the boss is destroyed.
 WASD keys: move the character     
 ESC: Exit the menu
 
+**Installing dependencies:**    
+1.  ```pip install arcade```
+2. ```pip install pytiled-parser[zstd]```
+
 # Название: The Conqueror of Dungeons
 **2D пиксельная игра с видом сверху**
 
@@ -56,6 +60,10 @@ ESC: Exit the menu
 Клавиши WASD: перемещение персонажа  
 K: атака   
 ESC: Выход в меню
+
+**Установка зависиомстей:**    
+1.  ```pip install arcade```
+2. ```pip install pytiled-parser[zstd]```
 
 ![1](assets/1.png)
 ![2](assets/2.png)
