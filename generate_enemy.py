@@ -8,7 +8,6 @@ from boss import Boss
 class Generate_enemy(arcade.SpriteList):
     def __init__(self):
         super().__init__()
-        self.spawn_points = []
         self.cell_size = 80 * 16 * TILE_SCALING // 5
 
     def spawn_enemy(self, x, y):

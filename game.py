@@ -5,6 +5,7 @@ from arcade.camera import Camera2D
 from arcade.types import Color
 from player import Player
 from config import *
+from portal import Portal
 
 
 class TheConquerorOfDungeons(arcade.View):
@@ -16,6 +17,7 @@ class TheConquerorOfDungeons(arcade.View):
         self.cell_size = 80 * 16 * TILE_SCALING // 5
 
         self.all_sprites = arcade.SpriteList()
+        self.portal_sprite = arcade.SpriteList()
         self.enemies = Generate_enemy()
 
         self.maps = ["assets/map1.tmx", "assets/map2.tmx", "assets/map3.tmx"]
@@ -55,6 +57,8 @@ class TheConquerorOfDungeons(arcade.View):
             volume=0.1,
             loop=True
         )
+        self.portal = Portal(0, 4)
+        self.portal_sprite.append(self.portal)
 
     def setup(self):
         self.spawn_player(self.coords_player[0], self.coords_player[1])
@@ -96,6 +100,7 @@ class TheConquerorOfDungeons(arcade.View):
         self.clear()
         self.world_camera.use()
         self.scene.draw(pixelated=True)
+        self.portal_sprite.draw(pixelated=True)
         self.all_sprites.draw(pixelated=True)
         self.torches.draw(pixelated=True)
         self.enemies.draw(pixelated=True)
@@ -186,6 +191,7 @@ class TheConquerorOfDungeons(arcade.View):
 
             for torch in self.torches:
                 torch.texture = self.torch_frames[self.current_frame]
+        self.portal.update_animation(delta_time)
 
     def draw_hp_bar(self):
         hp_ratio = max(0, self.player.health / self.player.max_health)
