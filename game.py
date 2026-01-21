@@ -6,6 +6,7 @@ from arcade.types import Color
 from player import Player
 from config import *
 from portal import Portal
+from resources_manager import ResourceManager
 
 
 class TheConquerorOfDungeons(arcade.View):
@@ -13,6 +14,7 @@ class TheConquerorOfDungeons(arcade.View):
         super().__init__()
         color = Color.from_hex_string('181425')
         arcade.set_background_color((color[0], color[1], color[2]))
+        self.resources_manager = ResourceManager()
 
         self.cell_size = 80 * 16 * TILE_SCALING // 5
 
@@ -20,8 +22,6 @@ class TheConquerorOfDungeons(arcade.View):
         self.portal_sprite = arcade.SpriteList()
         self.enemies = Generate_enemy()
 
-        self.maps = ["assets/map1.tmx", "assets/map2.tmx", "assets/map3.tmx"]
-        self.boss_map_path = "assets/boss_map.tmx"
         self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
         self.coords_player = MAP1_SPAWN_PLAYER_COORD
         self.lvl = 0
@@ -32,14 +32,10 @@ class TheConquerorOfDungeons(arcade.View):
             for _ in range(10):
                 self.enemies.spawn_in_grid(x, y)
 
-        self.tile_map1 = arcade.load_tilemap(
-            self.maps[0], scaling=TILE_SCALING)
-        self.tile_map2 = arcade.load_tilemap(
-            self.maps[1], scaling=TILE_SCALING)
-        self.tile_map3 = arcade.load_tilemap(
-            self.maps[2], scaling=TILE_SCALING)
-        self.boss_map = arcade.load_tilemap(
-            self.boss_map_path, scaling=TILE_SCALING)
+        self.tile_map1 = self.resources_manager.tile_map1
+        self.tile_map2 = self.resources_manager.tile_map2
+        self.tile_map3 = self.resources_manager.tile_map3
+        self.boss_map = self.resources_manager.boss_map
 
         self.scene1 = arcade.Scene.from_tilemap(self.tile_map1)
         self.scene2 = arcade.Scene.from_tilemap(self.tile_map2)
@@ -52,7 +48,7 @@ class TheConquerorOfDungeons(arcade.View):
         self.portal = None
         self.portal_spawned = False
         self.setup()
-        self.background_music = arcade.load_sound('assets/sounds/MUSIC.mp3')
+        self.background_music = self.resources_manager.background_music
 
         self.music_player = arcade.play_sound(
             self.background_music,
@@ -69,15 +65,8 @@ class TheConquerorOfDungeons(arcade.View):
         self.torches_list = self.tile_map.sprite_lists["torches"]
         self.details_list = self.tile_map.sprite_lists["details"]
 
-        self.torch_frames = []
+        self.torch_frames = self.resources_manager.torch_frames
         self.torches = arcade.SpriteList()
-
-        for i in range(1, 9):
-            texture = arcade.load_texture(f"assets/sprites/f{i}.png")
-            self.torch_frames.append(texture)
-
-        for sprite in self.torches_list:
-            self.torches.append(sprite)
 
         self.animation_timer = 0
         self.current_frame = 0

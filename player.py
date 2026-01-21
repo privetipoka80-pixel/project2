@@ -1,7 +1,7 @@
 import arcade
 from random import uniform
 from config import PLAYER_DAMAG, PLAYER_HEALTH
-
+from resources_manager import ResourceManager
 SCALE = 2
 
 
@@ -12,20 +12,16 @@ class Player(arcade.Sprite):
         self.damag = PLAYER_DAMAG
         self.max_health = PLAYER_HEALTH
 
+        self.resorces_manager = ResourceManager()
+
         self.hit_box_algoritm = 'Detailed'
 
-        self.idle_path = 'assets/player/IDLE.png'
-        self.walk_path = 'assets/player/WALK.png'
-        self.attack1_path = 'assets/player/ATTACK1.png'
-        self.attack2_path = 'assets/player/ATTACK2.png'
-        self.attack3_path = 'assets/player/ATTACK3.png'
-
-        self.sound1 = arcade.load_sound('assets/sounds/ATTACK1.mp3')
-        self.sound2 = arcade.load_sound('assets/sounds/ATTACK2.mp3')
+        self.sound1 = self.resorces_manager.sound1
+        self.sound2 = self.resorces_manager.sound2
         self.next_sound_is_sound1 = True
 
-        self.walk1 = arcade.load_sound('assets/sounds/WALK4.mp3')
-        self.walk2 = arcade.load_sound('assets/sounds/WALK5.mp3')
+        self.walk1 = self.resorces_manager.walk1
+        self.walk2 = self.resorces_manager.walk2
         self.next_sound_is_walk4 = True
 
         self.walk_sound_timer = 0
@@ -67,45 +63,11 @@ class Player(arcade.Sprite):
 
     def load_animations(self):
         """Загружает все анимации персонажа"""
-        # анимация покоя
-        idle_texture = arcade.load_texture(self.idle_path)
-        self.idle_frames = []
-        for i in range(7):
-            frame = idle_texture.crop(
-                i * self.frame_w, 0, self.frame_w, self.frame_h)
-            self.idle_frames.append(frame)
-
-        # анимация ходьбы
-        walk_texture = arcade.load_texture(self.walk_path)
-        self.walk_frames = []
-        for i in range(6):
-            frame = walk_texture.crop(
-                i * self.frame_w, 0, self.frame_w, self.frame_h)
-            self.walk_frames.append(frame)
-
-        # анимация атаки 1
-        attack1_texture = arcade.load_texture(self.attack1_path)
-        self.attack1_frames = []
-        for i in range(6):
-            frame = attack1_texture.crop(
-                i * self.frame_w, 0, self.frame_w, self.frame_h)
-            self.attack1_frames.append(frame)
-
-        # анимация атаки 2
-        attack2_texture = arcade.load_texture(self.attack2_path)
-        self.attack2_frames = []
-        for i in range(5):
-            frame = attack2_texture.crop(
-                i * self.frame_w, 0, self.frame_w, self.frame_h)
-            self.attack2_frames.append(frame)
-
-        # анимация атаки 3
-        attack3_texture = arcade.load_texture(self.attack3_path)
-        self.attack3_frames = []
-        for i in range(6):
-            frame = attack3_texture.crop(
-                i * self.frame_w, 0, self.frame_w, self.frame_h)
-            self.attack3_frames.append(frame)
+        self.idle_frames = self.resorces_manager.player_idle_frames
+        self.walk_frames = self.resorces_manager.player_walk_frames
+        self.attack1_frames = self.resorces_manager.player_attack1_frames
+        self.attack2_frames = self.resorces_manager.player_attack2_frames
+        self.attack3_frames = self.resorces_manager.player_attack3_frames
 
         self.texture = self.idle_frames[0]
 

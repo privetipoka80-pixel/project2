@@ -1,3 +1,4 @@
+from resources_manager import ResourceManager
 from config import ENEMY_HEALTH, ENEMY_DAMAG
 import arcade
 from random import uniform, random
@@ -12,15 +13,10 @@ class Enemy(arcade.Sprite):
         super().__init__(scale=SCALE)
         self.health = ENEMY_HEALTH
         self.damag = ENEMY_DAMAG
+        self.resources_manager = ResourceManager()
 
-        self.idle_path = 'assets/enemy/enemy4.png'
-        self.walk_path = 'assets/enemy/enemy3.png'
-        self.attack1_path = 'assets/enemy/enemy1.png'
-        self.dead_path = 'assets/enemy/enemy2.png'
-        self.attack3_path = 'assets/enemy/enemy5.png'
-
-        self.sound1 = arcade.load_sound('assets/sounds/ATTACK1.mp3')
-        self.sound2 = arcade.load_sound('assets/sounds/ATTACK2.mp3')
+        self.sound1 = self.resources_manager.sound1
+        self.sound2 = self.resources_manager.sound2
         self.next_sound_is_sound1 = True
 
         self.walk_sound_interval = 0.3
@@ -62,37 +58,10 @@ class Enemy(arcade.Sprite):
 
     def load_animations(self):
         """Загружает все анимации врага"""
-        # анимация покоя
-        idle_texture = arcade.load_texture(self.idle_path)
-        self.idle_frames = []
-        for i in range(4):
-            frame = idle_texture.crop(
-                i * self.frame_w, 0, self.frame_w, self.frame_h)
-            self.idle_frames.append(frame)
-
-        # анимация ходьбы
-        walk_texture = arcade.load_texture(self.walk_path)
-        self.walk_frames = []
-        for i in range(6):
-            frame = walk_texture.crop(
-                i * self.frame_w, 0, self.frame_w, self.frame_h)
-            self.walk_frames.append(frame)
-
-        # анимация атаки
-        attack1_texture = arcade.load_texture(self.attack1_path)
-        self.attack_frames = []
-        for i in range(6):
-            frame = attack1_texture.crop(
-                i * self.frame_w, 0, self.frame_w, self.frame_h)
-            self.attack_frames.append(frame)
-
-        # анимация смерти
-        dead_texture = arcade.load_texture(self.dead_path)
-        self.dead_frames = []
-        for i in range(6):
-            frame = dead_texture.crop(
-                i * self.frame_w, 0, self.frame_w, self.frame_h)
-            self.dead_frames.append(frame)
+        self.idle_frames = self.resources_manager.boss_idle_frames
+        self.walk_frames = self.resources_manager.boss_walk_frames
+        self.attack_frames = self.resources_manager.boss_attack_frames
+        self.dead_frames = self.resources_manager.boss_dead_frames
 
     def get_current_frames(self):
         """Возвращает текущие кадры анимации"""

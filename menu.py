@@ -2,12 +2,14 @@ import arcade
 from arcade.gui import (UITextureButton, UIManager,
                         UIAnchorLayout, UIBoxLayout, UILabel)
 from game import TheConquerorOfDungeons
+from resources_manager import ResourceManager
 
 
 class MenuView(arcade.View):
     def __init__(self):
         super().__init__()
         self.background_color = arcade.color.ARSENIC
+        self.resources_manager = ResourceManager()
 
         self.manager = UIManager()
         self.manager.enable()
@@ -24,12 +26,9 @@ class MenuView(arcade.View):
 
     def setup_widgets(self):
 
-        texture_normal = arcade.load_texture(
-            "assets/sprites/normal_button.png")
-        texture_hovered = arcade.load_texture(
-            "assets/sprites/hover_button.png")
-        texture_pressed = arcade.load_texture(
-            "assets/sprites/click_button.png")
+        texture_normal = self.resources_manager.TEXTURE_NORMAL
+        texture_hovered = self.resources_manager.TEXTURE_HOVERED
+        texture_pressed = self.resources_manager.TEXTURE_PRESSED
 
         label = UILabel(text="The Conqueror of Dungeons",
                         font_size=60,
@@ -90,7 +89,7 @@ class PauseView(arcade.View):
     def __init__(self, game_view):
         super().__init__()
         self.background_color = arcade.color.ARSENIC
-
+        self.resources_manager = ResourceManager()
         self.game_view = game_view
 
         self.manager = UIManager()
@@ -107,12 +106,9 @@ class PauseView(arcade.View):
         self.manager.add(self.anchor_layout)
 
     def setup_widgets(self):
-        texture_normal = arcade.load_texture(
-            "assets/sprites/normal_button.png")
-        texture_hovered = arcade.load_texture(
-            "assets/sprites/hover_button.png")
-        texture_pressed = arcade.load_texture(
-            "assets/sprites/click_button.png")
+        texture_normal = self.resources_manager.TEXTURE_NORMAL
+        texture_hovered = self.resources_manager.TEXTURE_HOVERED
+        texture_pressed = self.resources_manager.TEXTURE_PRESSED
 
         label = UILabel(text="Пауза",
                         font_size=60,
