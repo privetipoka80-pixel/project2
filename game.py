@@ -68,6 +68,9 @@ class TheConquerorOfDungeons(arcade.View):
         self.torch_frames = self.resources_manager.torch_frames
         self.torches = arcade.SpriteList()
 
+        for torch_sprite in self.torches_list:
+            self.torches.append(torch_sprite)
+
         self.animation_timer = 0
         self.current_frame = 0
         self.animation_speed = 0.1
