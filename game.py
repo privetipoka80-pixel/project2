@@ -1,4 +1,3 @@
-# pip install pytiled-parser[zstd]
 from generate_enemy import Generate_enemy
 import arcade
 from arcade.camera import Camera2D

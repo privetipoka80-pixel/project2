@@ -1,5 +1,6 @@
 import arcade
 from resources_manager import ResourceManager
+from menu import MenuView
 
 
 def main():
@@ -7,7 +8,6 @@ def main():
     resources.load_all_resources()
     window = arcade.Window(vsync=True, fullscreen=True)
     window.resources = resources
-    from menu import MenuView
     menu_view = MenuView()
     window.show_view(menu_view)
 

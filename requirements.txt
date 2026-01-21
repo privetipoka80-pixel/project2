@@ -1,0 +1,2 @@
+arcade==3.3.3
+pytiled_parser==2.2.9
