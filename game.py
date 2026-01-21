@@ -48,16 +48,15 @@ class TheConquerorOfDungeons(arcade.View):
         self.scene = self.scene1
 
         self.setup()
-
-    def setup(self):
         self.background_music = arcade.load_sound('assets/sounds/MUSIC.mp3')
 
-        # self.music_player = arcade.play_sound(
-        #     self.background_music,
-        #     volume=0.3,
-        #     loop=True
-        # )
+        self.music_player = arcade.play_sound(
+            self.background_music,
+            volume=0.1,
+            loop=True
+        )
 
+    def setup(self):
         self.spawn_player(self.coords_player[0], self.coords_player[1])
         self.world_camera = Camera2D()
         self.ui_camera = Camera2D()
@@ -160,17 +159,21 @@ class TheConquerorOfDungeons(arcade.View):
             self.scene = self.scene1
             self.coords_player = MAP1_SPAWN_PLAYER_COORD
             self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
+            self.wall_list = self.tile_map.sprite_lists["walls"]
+            self.details_list = self.tile_map.sprite_lists["details"]
+            self.torches.clear()
+            if "torches" in self.tile_map.sprite_lists:
+                for sprite in self.tile_map.sprite_lists["torches"]:
+                    self.torches.append(sprite)
             for x, y in self.coords_enemy:
                 for _ in range(10):
                     self.enemies.spawn_in_grid(x, y)
             self.spawn_player(self.coords_player[0], self.coords_player[1])
             self.player.health = PLAYER_HEALTH
-
             self.physics_engine = arcade.PhysicsEngineSimple(
                 self.player, self.wall_list)
             self.physics_engine2 = arcade.PhysicsEngineSimple(
                 self.player, self.details_list)
-
             self.world_camera.position = self.player.position
 
         self.player.update_animation(delta_time)
@@ -250,8 +253,16 @@ class TheConquerorOfDungeons(arcade.View):
     def next_level(self):
         if self.lvl != 4:
             for x, y in self.coords_enemy:
-                for _ in range(1):
+                for _ in range(10):
                     self.enemies.spawn_in_grid(x, y)
+
+        self.wall_list = self.tile_map.sprite_lists["walls"]
+        self.details_list = self.tile_map.sprite_lists["details"]
+
+        self.torches.clear()
+        if "torches" in self.tile_map.sprite_lists:
+            for sprite in self.tile_map.sprite_lists["torches"]:
+                self.torches.append(sprite)
 
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.player, self.wall_list)
@@ -259,5 +270,4 @@ class TheConquerorOfDungeons(arcade.View):
             self.player, self.details_list)
 
         self.world_camera.position = self.player.position
-
         self.setup()

@@ -4,7 +4,7 @@ from random import uniform, random
 import time
 import random
 import math
-SCALE = 4
+SCALE = 10
 
 
 class Boss(arcade.Sprite):
@@ -41,11 +41,11 @@ class Boss(arcade.Sprite):
             'dead': 0.25
         }
 
-        self.speed = 1.5
+        self.speed = 3
         self.change_x = 0  # скорость x
         self.change_y = 0  # скорость y
         self.move_timer = 0
-        self.detection_range = 200
+        self.detection_range = 1000
 
         self.state = 'idle'
 
