@@ -224,6 +224,7 @@ class TheConquerorOfDungeons(arcade.View):
             from menu import PauseView
             pause_view = PauseView(self)
             self.window.show_view(pause_view)
+            self.music_player.pause()
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.W:

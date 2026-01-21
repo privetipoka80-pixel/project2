@@ -138,6 +138,7 @@ class PauseView(arcade.View):
         self.box_layout.add(main_menu_button)
 
     def continue_game(self, event):
+        self.game_view.music_player.play()
         self.window.show_view(self.game_view)
 
     def main_menu(self, event):
