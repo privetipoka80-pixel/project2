@@ -106,6 +106,12 @@ class Boss(arcade.Sprite):
 
     def update_ai(self, player, delta_time, wall_list=None):
         """Основной метод ии врага"""
+        if self.health <= 0:
+            self.state = 'dead'
+            self.change_x = 0
+            self.change_y = 0
+            return
+
         if self.random_move_cooldown > 0:
             self.random_move_cooldown -= delta_time
 
@@ -159,6 +165,8 @@ class Boss(arcade.Sprite):
 
     def damag_to_enemy(self, player):
         """"Нанесение урона главному герою"""
+        if self.health <= 0:
+            return False
         if arcade.check_for_collision(self, player) and self.state == 'attack':
             if not self.damage_dealt_in_attack:
                 self.damage_dealt_in_attack = True
@@ -218,6 +226,23 @@ class Boss(arcade.Sprite):
 
     def update_animation(self, delta_time):
         """Обновление анимации"""
+        if self.health <= 0:
+            self.state = 'dead'
+            frames = self.dead_frames
+            self.animation_time += delta_time
+            if self.animation_time >= self.animation_speeds['dead']:
+                self.animation_time = 0
+                if self.current_frame < len(frames) - 1:
+                    self.current_frame += 1
+                    self.texture = frames[self.current_frame]
+                else:
+                    self.texture = frames[-1]
+                    self.is_dead = True
+
+                if self.side == 'left':
+                    self.texture = self.texture.flip_horizontally()
+            return
+
         self.animation_time += delta_time
         current_speed = self.get_current_speed()
 

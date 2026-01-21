@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="80" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="80" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="1">
  <tileset firstgid="1" source="boss_map_set.tsx"/>
  <layer id="1" name="walls" width="80" height="80">
   <data encoding="base64" compression="zlib">
    eJzt1cEJwkAUhOE0YdQOPNiBBzvwYAdq7L8F9yIswSwrz/Bm5P8gJMaAa5jZNwwAAAAAAAAAAABo2ZRjLMe2Ou+q8zi7v3Td83n+G0u/977er/i/f+WQvYCGY/YCOpyyF9Bwzl5AB+X8XbMX0EE5fw79vWQvoIH+xtDfGPobQ39jHPKn3F+H/Cn312F+KPfXIX/K/XXY/8hfjHL+HPY/5fnh0F/l/Dn0l/zFkL8Y5fnrMD+U8+fw/tj/YpT767D/0d8Y5f6SvxiH/Y/8xSjPD4f8KfeX/MU4zF/l9+eQP+X+OuRPef46zA/6G0N/Y5Tz59Bf5fw59Fd5fjj091aOezke1Xn6cK/+bv7M1PnMt9fPFf83AAAAAAAAAADAv3gBqeok4w==
+  </data>
+ </layer>
+ <layer id="3" name="torches" width="80" height="80">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20Hb6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA1wBkAAAB
+  </data>
+ </layer>
+ <layer id="4" name="details" width="80" height="80">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20Hb6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA1wBkAAAB
   </data>
  </layer>
  <layer id="2" name="floor" width="80" height="80">

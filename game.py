@@ -19,7 +19,7 @@ class TheConquerorOfDungeons(arcade.View):
         self.enemies = Generate_enemy()
 
         self.maps = ["assets/map1.tmx", "assets/map2.tmx", "assets/map3.tmx"]
-        self.boss_map = "assets/boss_map.tmx"
+        self.boss_map_path = "assets/boss_map.tmx"
         self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
         self.coords_player = MAP1_SPAWN_PLAYER_COORD
         self.lvl = 0
@@ -37,7 +37,7 @@ class TheConquerorOfDungeons(arcade.View):
         self.tile_map3 = arcade.load_tilemap(
             self.maps[2], scaling=TILE_SCALING)
         self.boss_map = arcade.load_tilemap(
-            self.boss_map, scaling=TILE_SCALING)
+            self.boss_map_path, scaling=TILE_SCALING)
 
         self.scene1 = arcade.Scene.from_tilemap(self.tile_map1)
         self.scene2 = arcade.Scene.from_tilemap(self.tile_map2)
@@ -115,15 +115,15 @@ class TheConquerorOfDungeons(arcade.View):
             (self.player.position),
             CAMERA_LERP)
         for enemy in self.enemies:
-            enemy.update_ai(self.player, delta_time, self.wall_list)
+            if enemy.health > 0:
+                enemy.update_ai(self.player, delta_time, self.wall_list)
+                if enemy.damag_to_enemy(self.player):
+                    self.player.health -= enemy.damag
             enemy.update_animation(delta_time)
-            if enemy.damag_to_enemy(self.player):
-                self.player.health -= enemy.damag
-            if enemy.health <= 0 and enemy.is_dead:
-                self.enemies.remove(enemy)
-
             if self.player.damag_to_player(enemy):
                 enemy.health -= self.player.damag
+            if enemy.health <= 0 and enemy.is_dead:
+                self.enemies.remove(enemy)
 
         print(self.player.health)
         if not self.enemies:
@@ -148,9 +148,10 @@ class TheConquerorOfDungeons(arcade.View):
             if self.lvl == 4:
                 self.tile_map = self.boss_map
                 self.scene = self.scene4
-                self.spawn_player(1, 1)
+                self.coords_player = (1, 1)
                 self.enemies.spawn_boss_in_grid(2, 2)
                 self.player.health = self.player.max_health
+                self.next_level()
 
         if self.player.health <= 0:
             self.lvl = 0
@@ -247,11 +248,10 @@ class TheConquerorOfDungeons(arcade.View):
         pass
 
     def next_level(self):
-        self.spawn_player(self.coords_player[0], self.coords_player[1])
-
-        for x, y in self.coords_enemy:
-            for _ in range(10):
-                self.enemies.spawn_in_grid(x, y)
+        if self.lvl != 4:
+            for x, y in self.coords_enemy:
+                for _ in range(1):
+                    self.enemies.spawn_in_grid(x, y)
 
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.player, self.wall_list)
