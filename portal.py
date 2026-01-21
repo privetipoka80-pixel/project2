@@ -37,8 +37,7 @@ class Portal(arcade.Sprite):
                                   1) % len(self.idle_frames)
             self.texture = self.idle_frames[self.current_frame]
 
-    def set_position(self, grid_x, grid_y):
-        x = grid_x * self.cell_size + self.cell_size // 2
-        y = grid_y * self.cell_size + self.cell_size // 2
-        self.center_x = x
-        self.center_y = y
+    def is_in_portal(self, player):
+        if arcade.check_for_collision(self, player):
+            return True
+        return False

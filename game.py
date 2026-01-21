@@ -49,6 +49,8 @@ class TheConquerorOfDungeons(arcade.View):
         self.tile_map = self.tile_map1
         self.scene = self.scene1
 
+        self.portal = None
+        self.portal_spawned = False
         self.setup()
         self.background_music = arcade.load_sound('assets/sounds/MUSIC.mp3')
 
@@ -57,8 +59,6 @@ class TheConquerorOfDungeons(arcade.View):
             volume=0.1,
             loop=True
         )
-        self.portal = Portal(0, 4)
-        self.portal_sprite.append(self.portal)
 
     def setup(self):
         self.spawn_player(self.coords_player[0], self.coords_player[1])
@@ -95,6 +95,15 @@ class TheConquerorOfDungeons(arcade.View):
         self.player.center_x = x
         self.player.center_y = y
 
+    def spawn_portal(self, grid_x, grid_y):
+        x = grid_x * self.cell_size + self.cell_size // 2
+        y = grid_y * self.cell_size + self.cell_size // 2
+        self.portal = Portal()
+        self.portal.center_x = x
+        self.portal.center_y = y
+        self.portal_sprite.append(self.portal)
+        self.portal_spawned = True
+
     def on_draw(self):
         """Отрисовка кадра"""
         self.clear()
@@ -118,6 +127,8 @@ class TheConquerorOfDungeons(arcade.View):
             self.world_camera.position,
             (self.player.position),
             CAMERA_LERP)
+
+        enemies_to_remove = []
         for enemy in self.enemies:
             if enemy.health > 0:
                 enemy.update_ai(self.player, delta_time, self.wall_list)
@@ -127,39 +138,41 @@ class TheConquerorOfDungeons(arcade.View):
             if self.player.damag_to_player(enemy):
                 enemy.health -= self.player.damag
             if enemy.health <= 0 and enemy.is_dead:
-                self.enemies.remove(enemy)
+                enemies_to_remove.append(enemy)
 
-        print(self.player.health)
-        if not self.enemies:
-            self.lvl += 1
-            if self.lvl == 1:
-                self.tile_map = self.tile_map1
-                self.scene = self.scene1
-                self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
-                self.coords_player = MAP1_SPAWN_PLAYER_COORD
-            if self.lvl == 2:
-                self.tile_map = self.tile_map2
-                self.scene = self.scene2
-                self.coords_enemy = MAP2_SPAWN_ENEMY_COORD
-                self.coords_player = MAP2_SPAWN_PLAYER_COORD
-                self.next_level()
-            if self.lvl == 3:
-                self.tile_map = self.tile_map3
-                self.scene = self.scene3
-                self.coords_enemy = MAP3_SPAWN_ENEMY_COORD
-                self.coords_player = MAP3_SPAWN_PLAYER_COORD
-                self.next_level()
-            if self.lvl == 4:
-                self.tile_map = self.boss_map
-                self.scene = self.scene4
-                self.coords_player = (1, 1)
-                self.enemies.spawn_boss_in_grid(2, 2)
-                self.player.health = self.player.max_health
-                self.next_level()
+        for enemy in enemies_to_remove:
+            self.enemies.remove(enemy)
+
+        if not self.enemies and not self.portal_spawned:
+            if self.lvl == 0:
+                self.spawn_portal(0, 4)
+            elif self.lvl == 1:
+                self.spawn_portal(4, 4)
+            elif self.lvl == 2:
+                self.spawn_portal(0, 0)
+
+        if self.portal and self.portal_spawned:
+            if self.portal.is_in_portal(self.player):
+                self.handle_level_transition()
+        if self.portal:
+            self.portal.update_animation(delta_time)
+
+        self.player.update_animation(delta_time)
+
+        self.animation_timer += delta_time
+        if self.animation_timer >= self.animation_speed:
+            self.animation_timer = 0
+            self.current_frame = (self.current_frame +
+                                  1) % len(self.torch_frames)
+            for torch in self.torches:
+                torch.texture = self.torch_frames[self.current_frame]
 
         if self.player.health <= 0:
             self.lvl = 0
             self.enemies.clear()
+            self.portal = None
+            self.portal_sprite.clear()
+            self.portal_spawned = False
             self.tile_map = self.tile_map1
             self.scene = self.scene1
             self.coords_player = MAP1_SPAWN_PLAYER_COORD
@@ -181,17 +194,37 @@ class TheConquerorOfDungeons(arcade.View):
                 self.player, self.details_list)
             self.world_camera.position = self.player.position
 
-        self.player.update_animation(delta_time)
-        self.animation_timer += delta_time
+    def handle_level_transition(self):
+        self.portal = None
+        self.portal_sprite.clear()
+        self.portal_spawned = False
 
-        if self.animation_timer >= self.animation_speed:
-            self.animation_timer = 0
-            self.current_frame = (self.current_frame +
-                                  1) % len(self.torch_frames)
+        self.lvl += 1
 
-            for torch in self.torches:
-                torch.texture = self.torch_frames[self.current_frame]
-        self.portal.update_animation(delta_time)
+        if self.lvl == 1:
+            self.tile_map = self.tile_map2
+            self.scene = self.scene2
+            self.coords_enemy = MAP2_SPAWN_ENEMY_COORD
+            self.coords_player = MAP2_SPAWN_PLAYER_COORD
+            self.next_level()
+
+        elif self.lvl == 2:
+            self.tile_map = self.tile_map3
+            self.scene = self.scene3
+            self.coords_enemy = MAP3_SPAWN_ENEMY_COORD
+            self.coords_player = MAP3_SPAWN_PLAYER_COORD
+            self.next_level()
+
+        elif self.lvl == 3:
+            self.tile_map = self.boss_map
+            self.scene = self.scene4
+            self.coords_player = (1, 1)
+            self.enemies.spawn_boss_in_grid(2, 2)
+            self.player.health = self.player.max_health
+            self.next_level()
+
+        elif self.lvl == 4:
+            pass
 
     def draw_hp_bar(self):
         hp_ratio = max(0, self.player.health / self.player.max_health)
@@ -258,7 +291,7 @@ class TheConquerorOfDungeons(arcade.View):
         pass
 
     def next_level(self):
-        if self.lvl != 4:
+        if self.lvl != 3:
             for x, y in self.coords_enemy:
                 for _ in range(10):
                     self.enemies.spawn_in_grid(x, y)
