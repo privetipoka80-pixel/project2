@@ -6,6 +6,7 @@ from classes.player import Player
 from config import *
 from classes.portal import Portal
 from classes.resources_manager import ResourceManager
+import os
 
 
 class TheConquerorOfDungeons(arcade.View):
@@ -54,6 +55,15 @@ class TheConquerorOfDungeons(arcade.View):
             volume=0.1,
             loop=True
         )
+        self.balance = 0
+        self.balance_file = 'balance.txt'
+        try:
+            with open(self.balance_file, 'r', encoding='utf-8') as f:
+                self.balance = int(f.read())
+        except:
+            self.balance = 0
+            with open(self.balance_file, 'w', encoding='utf-8') as f:
+                f.write('0')
 
     def setup(self):
         self.spawn_player(self.coords_player[0], self.coords_player[1])
