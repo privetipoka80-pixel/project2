@@ -7,6 +7,8 @@ from config import *
 from classes.portal import Portal
 from classes.resources_manager import ResourceManager
 import os
+from classes.coin import Coin
+from arcade.gui import UIManager, UILabel
 
 
 class TheConquerorOfDungeons(arcade.View):
@@ -21,6 +23,9 @@ class TheConquerorOfDungeons(arcade.View):
         self.all_sprites = arcade.SpriteList()
         self.portal_sprite = arcade.SpriteList()
         self.enemies = Generate_enemy()
+        self.coins = arcade.SpriteList()
+        self.ui_manager = UIManager()
+        self.balance_label = None
 
         self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
         self.coords_player = MAP1_SPAWN_PLAYER_COORD
@@ -88,6 +93,7 @@ class TheConquerorOfDungeons(arcade.View):
             self.player, self.wall_list)
         self.physics_engine2 = arcade.PhysicsEngineSimple(
             self.player, self.details_list)
+        self.ui_manager.enable()
 
     def spawn_player(self, grid_x, grid_y):
         """Спавн игрока в сетке комнат/коридоров"""
@@ -105,6 +111,12 @@ class TheConquerorOfDungeons(arcade.View):
         self.portal_sprite.append(self.portal)
         self.portal_spawned = True
 
+    def on_show(self):
+        self.ui_manager.enable()
+
+    def on_hide(self):
+        self.ui_manager.disable()
+
     def on_draw(self):
         """Отрисовка кадра"""
         self.clear()
@@ -113,16 +125,37 @@ class TheConquerorOfDungeons(arcade.View):
         self.portal_sprite.draw(pixelated=True)
         self.all_sprites.draw(pixelated=True)
         self.torches.draw(pixelated=True)
+        self.coins.draw(pixelated=True)
         self.enemies.draw(pixelated=True)
 
         self.ui_camera.use()
         self.draw_hp_bar()
+        self.ui_manager.draw()
+
+    def update_balance_text(self):
+        text = f"Баланс: {self.balance}"
+        if self.balance_label is None:
+            self.balance_label = UILabel(
+                text=text,
+                font_size=20,
+                text_color=arcade.color.GOLD,
+                font_name="Arial",
+                x=20,
+                y=self.window.height - 80,
+                width=200,
+                height=30
+            )
+            self.ui_manager.add(self.balance_label)
+        else:
+            if self.balance_label.text != text:
+                self.balance_label.text = text
 
     def on_update(self, delta_time):
         """Обновление логики игры"""
         self.player.update()
         self.physics_engine.update()
         self.physics_engine2.update()
+        self.update_balance_text()
 
         self.world_camera.position = arcade.math.lerp_2d(
             self.world_camera.position,
@@ -139,7 +172,24 @@ class TheConquerorOfDungeons(arcade.View):
             if self.player.damag_to_player(enemy):
                 enemy.health -= self.player.damag
             if enemy.health <= 0 and enemy.is_dead:
+
+                coin = Coin()
+                coin.center_x = enemy.center_x
+                coin.center_y = enemy.center_y
+                self.coins.append(coin)
                 enemies_to_remove.append(enemy)
+
+        coins_to_remove = []
+        for coin in self.coins:
+            coin.update_animation(delta_time)
+            if coin.is_get_coin(self.player):
+                self.balance += 1
+                coins_to_remove.append(coin)
+
+        for coin in coins_to_remove:
+            coin.remove_from_sprite_lists()
+            with open(self.balance_file, 'w', encoding='utf-8') as f:
+                f.write(str(self.balance))
 
         for enemy in enemies_to_remove:
             self.enemies.remove(enemy)
@@ -169,36 +219,42 @@ class TheConquerorOfDungeons(arcade.View):
                 torch.texture = self.torch_frames[self.current_frame]
 
         if self.player.health <= 0:
-            self.lvl = 0
-            self.enemies.clear()
-            self.portal = None
-            self.portal_sprite.clear()
-            self.portal_spawned = False
-            self.tile_map = self.tile_map1
-            self.scene = self.scene1
-            self.coords_player = MAP1_SPAWN_PLAYER_COORD
-            self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
-            self.wall_list = self.tile_map.sprite_lists["walls"]
-            self.details_list = self.tile_map.sprite_lists["details"]
-            self.torches.clear()
-            if "torches" in self.tile_map.sprite_lists:
-                for sprite in self.tile_map.sprite_lists["torches"]:
-                    self.torches.append(sprite)
-            for x, y in self.coords_enemy:
-                for _ in range(10):
-                    self.enemies.spawn_in_grid(x, y)
-            self.spawn_player(self.coords_player[0], self.coords_player[1])
-            self.player.health = PLAYER_HEALTH
-            self.physics_engine = arcade.PhysicsEngineSimple(
-                self.player, self.wall_list)
-            self.physics_engine2 = arcade.PhysicsEngineSimple(
-                self.player, self.details_list)
-            self.world_camera.position = self.player.position
+            self.game_over()
+
+    def game_over(self):
+        """Сброс игры при смерти"""
+        self.lvl = 0
+        self.enemies.clear()
+        self.portal = None
+        self.portal_sprite.clear()
+        self.portal_spawned = False
+        self.coins.clear()
+        self.tile_map = self.tile_map1
+        self.scene = self.scene1
+        self.coords_player = MAP1_SPAWN_PLAYER_COORD
+        self.coords_enemy = MAP1_SPAWN_ENEMY_COORD
+        self.wall_list = self.tile_map.sprite_lists["walls"]
+        self.details_list = self.tile_map.sprite_lists["details"]
+        self.torches.clear()
+        if "torches" in self.tile_map.sprite_lists:
+            for sprite in self.tile_map.sprite_lists["torches"]:
+                self.torches.append(sprite)
+        for x, y in self.coords_enemy:
+            for _ in range(10):
+                self.enemies.spawn_in_grid(x, y)
+        self.spawn_player(self.coords_player[0], self.coords_player[1])
+        self.player.health = PLAYER_HEALTH
+        self.physics_engine = arcade.PhysicsEngineSimple(
+            self.player, self.wall_list)
+        self.physics_engine2 = arcade.PhysicsEngineSimple(
+            self.player, self.details_list)
+        self.world_camera.position = self.player.position
 
     def handle_level_transition(self):
         self.portal = None
         self.portal_sprite.clear()
         self.portal_spawned = False
+        self.coins.clear()
 
         self.lvl += 1
 
