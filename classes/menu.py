@@ -2,7 +2,7 @@ import arcade
 from arcade.gui import (UITextureButton, UIManager,
                         UIAnchorLayout, UIBoxLayout, UILabel)
 from game import TheConquerorOfDungeons
-from resources_manager import ResourceManager
+from .resources_manager import ResourceManager
 
 
 class MenuView(arcade.View):

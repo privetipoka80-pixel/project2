@@ -1,19 +1,18 @@
-from resources_manager import ResourceManager
-from config import BOSS_DAMAG, BOSS_HEALTH
+from .resources_manager import ResourceManager
+from config import ENEMY_HEALTH, ENEMY_DAMAG
 import arcade
 from random import uniform, random
 import time
 import random
 import math
-SCALE = 10
+SCALE = 1.7
 
 
-class Boss(arcade.Sprite):
+class Enemy(arcade.Sprite):
     def __init__(self):
         super().__init__(scale=SCALE)
-        self.health = BOSS_HEALTH
-        self.damag = BOSS_DAMAG
-
+        self.health = ENEMY_HEALTH
+        self.damag = ENEMY_DAMAG
         self.resources_manager = ResourceManager()
 
         self.sound1 = self.resources_manager.sound1
@@ -21,6 +20,9 @@ class Boss(arcade.Sprite):
         self.next_sound_is_sound1 = True
 
         self.walk_sound_interval = 0.3
+
+        self.frame_w = 64
+        self.frame_h = 64
         self.side = 'right'
         self.load_animations()
         self.texture = self.idle_frames[0]
@@ -35,11 +37,11 @@ class Boss(arcade.Sprite):
             'dead': 0.25
         }
 
-        self.speed = 3
+        self.speed = 1.5
         self.change_x = 0  # скорость x
         self.change_y = 0  # скорость y
         self.move_timer = 0
-        self.detection_range = 1000
+        self.detection_range = 200
 
         self.state = 'idle'
 

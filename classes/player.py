@@ -1,7 +1,7 @@
 import arcade
 from random import uniform
 from config import PLAYER_DAMAG, PLAYER_HEALTH
-from resources_manager import ResourceManager
+from .resources_manager import ResourceManager
 SCALE = 2
 
 

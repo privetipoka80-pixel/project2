@@ -1,8 +1,8 @@
-from enemy import Enemy
+from .enemy import Enemy
 import arcade
 from random import randint
 from config import TILE_SCALING
-from boss import Boss
+from .boss import Boss
 
 
 class Generate_enemy(arcade.SpriteList):

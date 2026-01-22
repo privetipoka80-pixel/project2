@@ -1,11 +1,11 @@
-from generate_enemy import Generate_enemy
+from classes.generate_enemy import Generate_enemy
 import arcade
 from arcade.camera import Camera2D
 from arcade.types import Color
-from player import Player
+from classes.player import Player
 from config import *
-from portal import Portal
-from resources_manager import ResourceManager
+from classes.portal import Portal
+from classes.resources_manager import ResourceManager
 
 
 class TheConquerorOfDungeons(arcade.View):
@@ -251,7 +251,7 @@ class TheConquerorOfDungeons(arcade.View):
         if key == arcade.key.K:
             self.player.attack()
         if key == arcade.key.ESCAPE:
-            from menu import PauseView
+            from classes.menu import PauseView
             pause_view = PauseView(self)
             self.window.show_view(pause_view)
             self.music_player.pause()
@@ -279,7 +279,9 @@ class TheConquerorOfDungeons(arcade.View):
             self.player.curr_texture_index = 0
 
     def on_mouse_press(self, x, y, button, modifiers):
-        pass
+        super().on_mouse_press(x, y, button, modifiers)
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            self.player.attack()
 
     def next_level(self):
         if self.lvl != 3:

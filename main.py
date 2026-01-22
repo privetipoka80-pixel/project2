@@ -1,6 +1,6 @@
 import arcade
-from resources_manager import ResourceManager
-from menu import MenuView
+from classes.resources_manager import ResourceManager
+from classes.menu import MenuView
 
 
 def main():
