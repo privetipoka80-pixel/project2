@@ -345,9 +345,12 @@ class TheConquerorOfDungeons(arcade.View):
             self.player.curr_texture_index = 0
 
     def on_mouse_press(self, x, y, button, modifiers):
-        super().on_mouse_press(x, y, button, modifiers)
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.player.attack()
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            pass
 
     def next_level(self):
         if self.lvl != 3:
