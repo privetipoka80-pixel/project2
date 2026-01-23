@@ -17,6 +17,8 @@ class TheConquerorOfDungeons(arcade.View):
         color = Color.from_hex_string('181425')
         arcade.set_background_color((color[0], color[1], color[2]))
         self.resources_manager = ResourceManager()
+        arcade.load_font("assets/tiles/4 GUI/TinyFontCraftpixPixel.otf")
+        self.custom_font = "TinyFontCraftpixPixel"
 
         self.cell_size = 80 * 16 * TILE_SCALING // 5
 
@@ -133,13 +135,13 @@ class TheConquerorOfDungeons(arcade.View):
         self.ui_manager.draw()
 
     def update_balance_text(self):
-        text = f"Баланс: {self.balance}"
+        text = f"Balance: {self.balance}"
         if self.balance_label is None:
             self.balance_label = UILabel(
                 text=text,
                 font_size=20,
                 text_color=arcade.color.GOLD,
-                font_name="Arial",
+                font_name=self.custom_font,
                 x=20,
                 y=self.window.height - 80,
                 width=200,

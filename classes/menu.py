@@ -11,6 +11,12 @@ class MenuView(arcade.View):
         self.background_color = arcade.color.ARSENIC
         self.resources_manager = ResourceManager()
 
+        arcade.load_font("assets/tiles/4 GUI/TinyFontCraftpixPixel.otf")
+        self.custom_font = "TinyFontCraftpixPixel"
+        self.style = {"normal": UITextureButton.UIStyle(font_name=self.custom_font, font_size=20),
+                      "hover": UITextureButton.UIStyle(font_name=self.custom_font, font_size=20),
+                      "pressed": UITextureButton.UIStyle(font_name=self.custom_font, font_size=20),
+                      "press": UITextureButton.UIStyle(font_name=self.custom_font, font_size=20), }
         self.manager = UIManager()
         self.manager.enable()
 
@@ -34,34 +40,37 @@ class MenuView(arcade.View):
                         font_size=60,
                         text_color=arcade.color.WHITE,
                         width=300,
-                        align="center")
+                        align="center",
+                        font_name=self.custom_font)
         self.box_layout.add(label)
-
-        start_game_button = UITextureButton(text='Старт',
+        start_game_button = UITextureButton(text='Start game',
                                             texture=texture_normal,
                                             texture_hovered=texture_hovered,
                                             texture_pressed=texture_pressed,
                                             scale=2.0,
-                                            font_name='arial'
+                                            style=self.style
                                             )
         start_game_button.on_click = self.start_game
         self.box_layout.add(start_game_button)
 
-        records_button = UITextureButton(text='Рекорды',
+        records_button = UITextureButton(text='Records',
                                          texture=texture_normal,
                                          texture_hovered=texture_hovered,
                                          texture_pressed=texture_pressed,
                                          scale=2.0,
+                                         font_name=self.custom_font,
+                                         style=self.style
                                          )
         records_button.on_click = self.records_click
         self.box_layout.add(records_button)
 
         # если нажать заработает метод exit_click
-        exit = UITextureButton(text='Выход',
+        exit = UITextureButton(text='Exit',
                                texture=texture_normal,
                                texture_hovered=texture_hovered,
                                texture_pressed=texture_pressed,
                                scale=2.0,
+                               style=self.style
                                )
         exit.on_click = self.exit
         self.box_layout.add(exit)
@@ -100,6 +109,13 @@ class PauseView(arcade.View):
         self.resources_manager = ResourceManager()
         self.game_view = game_view
 
+        arcade.load_font("assets/tiles/4 GUI/TinyFontCraftpixPixel.otf")
+        self.custom_font = "TinyFontCraftpixPixel"
+        self.style = {"normal": UITextureButton.UIStyle(font_name=self.custom_font, font_size=20),
+                      "hover": UITextureButton.UIStyle(font_name=self.custom_font, font_size=20),
+                      "pressed": UITextureButton.UIStyle(font_name=self.custom_font, font_size=20),
+                      "press": UITextureButton.UIStyle(font_name=self.custom_font, font_size=20), }
+
         self.manager = UIManager()
         self.manager.enable()
 
@@ -118,26 +134,31 @@ class PauseView(arcade.View):
         texture_hovered = self.resources_manager.TEXTURE_HOVERED
         texture_pressed = self.resources_manager.TEXTURE_PRESSED
 
-        label = UILabel(text="Пауза",
+        label = UILabel(text="Pause",
                         font_size=60,
                         text_color=arcade.color.WHITE,
                         width=300,
-                        align="center")
+                        align="center",
+                        font_name=self.custom_font)
         self.box_layout.add(label)
 
-        continue_button = UITextureButton(text='Продолжить',
+        continue_button = UITextureButton(text='Continue',
                                           texture=texture_normal,
                                           texture_hovered=texture_hovered,
                                           texture_pressed=texture_pressed,
-                                          scale=2.0)
+                                          scale=2.0,
+                                          style=self.style
+                                          )
         continue_button.on_click = self.continue_game
         self.box_layout.add(continue_button)
 
-        main_menu_button = UITextureButton(text='Главное меню',
+        main_menu_button = UITextureButton(text='Main menu',
                                            texture=texture_normal,
                                            texture_hovered=texture_hovered,
                                            texture_pressed=texture_pressed,
-                                           scale=2.0)
+                                           scale=2.0,
+                                           style=self.style
+                                           )
         main_menu_button.on_click = self.main_menu
         self.box_layout.add(main_menu_button)
 

@@ -3,7 +3,6 @@ SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
 SCREEN_TITLE = "The Conqueror of Dungeons"
 TILE_SCALING = 4
-SPEED = 2
 SCALE = 0.5
 CAMERA_LERP = 0.1
 TILE_SIZE = 80
@@ -15,6 +14,7 @@ PLAYER_DAMAG = 35
 HP_BAR_WIDTH = 300
 HP_BAR_HEIGHT = 20
 HP_BAR_MARGIN = 20
+SPEED = 2
 
 
 """__________ENEMY__________"""
@@ -24,6 +24,7 @@ ENEMY_DAMAG = 5
 """__________BOSS__________"""
 BOSS_HEALTH = 1000
 BOSS_DAMAG = 80
+SPEED_CHASE = 5
 
 
 """__________MAP1__________"""

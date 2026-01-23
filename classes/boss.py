@@ -1,5 +1,5 @@
 from .resources_manager import ResourceManager
-from config import BOSS_DAMAG, BOSS_HEALTH
+from config import BOSS_DAMAG, BOSS_HEALTH, SPEED_CHASE
 import arcade
 from random import uniform, random
 import time
@@ -48,7 +48,7 @@ class Boss(arcade.Sprite):
         self.random_move_chance = 0.03
         self.attack_cooldown_time = 2
         self.random_move_duration = 2
-        self.chase_speed = 1.5
+        self.chase_speed = SPEED_CHASE
         self.attack_range = 50
 
         self.damage_dealt_in_attack = False
