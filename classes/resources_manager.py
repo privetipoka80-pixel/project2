@@ -127,3 +127,4 @@ class ResourceManager():
         self.walk1 = arcade.load_sound('assets/sounds/WALK4.mp3')
         self.walk2 = arcade.load_sound('assets/sounds/WALK5.mp3')
         self.coin_sound = arcade.load_sound('assets/sounds/coin.mp3')
+        self.background_texture = arcade.load_texture("assets/sprites/background.png")

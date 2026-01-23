@@ -8,9 +8,8 @@ from .resources_manager import ResourceManager
 class MenuView(arcade.View):
     def __init__(self):
         super().__init__()
-        self.background_color = arcade.color.ARSENIC
         self.resources_manager = ResourceManager()
-
+        self.background_texture = self.resources_manager.background_texture
         arcade.load_font("assets/tiles/4 GUI/TinyFontCraftpixPixel.otf")
         self.custom_font = "TinyFontCraftpixPixel"
         self.style = {"normal": UITextureButton.UIStyle(font_name=self.custom_font, font_size=20),
@@ -99,7 +98,11 @@ class MenuView(arcade.View):
 
     def on_draw(self):
         self.clear()
-        self.manager.draw()
+        width = self.window.width
+        height = self.window.height
+        arcade.draw_texture_rect(self.background_texture, arcade.rect.XYWH(
+            width // 2, height // 2, width, height))
+        self.manager.draw(pixelated=True)
 
 
 class PauseView(arcade.View):
@@ -108,6 +111,7 @@ class PauseView(arcade.View):
         self.background_color = arcade.color.ARSENIC
         self.resources_manager = ResourceManager()
         self.game_view = game_view
+        self.background_texture = self.resources_manager.background_texture
 
         arcade.load_font("assets/tiles/4 GUI/TinyFontCraftpixPixel.otf")
         self.custom_font = "TinyFontCraftpixPixel"
@@ -184,4 +188,8 @@ class PauseView(arcade.View):
 
     def on_draw(self):
         self.clear()
+        width = self.window.width
+        height = self.window.height
+        arcade.draw_texture_rect(self.background_texture, arcade.rect.XYWH(
+            width // 2, height // 2, width, height))
         self.manager.draw()
