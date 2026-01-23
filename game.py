@@ -250,6 +250,16 @@ class TheConquerorOfDungeons(arcade.View):
             self.player, self.details_list)
         self.world_camera.position = self.player.position
 
+    def on_show(self):
+        self.ui_manager.enable()
+        if self.music_player and not self.music_player.playing:
+            self.music_player.play()
+
+    def on_hide(self):
+        self.ui_manager.disable()
+        if self.music_player:
+            self.music_player.pause()
+
     def handle_level_transition(self):
         self.portal = None
         self.portal_sprite.clear()

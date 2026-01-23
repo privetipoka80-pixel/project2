@@ -66,11 +66,19 @@ class MenuView(arcade.View):
         exit.on_click = self.exit
         self.box_layout.add(exit)
 
+    def on_show(self):
+        self.manager.enable()
+
+    def on_hide(self):
+        self.manager.disable()
+
     def start_game(self, event):
+        self.manager.disable()
         self.game_view = TheConquerorOfDungeons()
         self.window.show_view(self.game_view)
 
     def exit(self, event):
+        self.manager.disable()
         arcade.exit()
 
     def records_click(self, event):
@@ -133,11 +141,19 @@ class PauseView(arcade.View):
         main_menu_button.on_click = self.main_menu
         self.box_layout.add(main_menu_button)
 
+    def on_show(self):
+        self.manager.enable()
+
+    def on_hide(self):
+        self.manager.disable()
+
     def continue_game(self, event):
+        self.manager.disable()
         self.game_view.music_player.play()
         self.window.show_view(self.game_view)
 
     def main_menu(self, event):
+        self.manager.disable()
         menu_view = MenuView()
         self.window.show_view(menu_view)
 
