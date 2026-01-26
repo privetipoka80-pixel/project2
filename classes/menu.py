@@ -108,10 +108,8 @@ class MenuView(arcade.View):
 class PauseView(arcade.View):
     def __init__(self, game_view):
         super().__init__()
-        self.background_color = arcade.color.ARSENIC
         self.resources_manager = ResourceManager()
         self.game_view = game_view
-        self.background_texture = self.resources_manager.background_texture
 
         arcade.load_font("assets/tiles/4 GUI/TinyFontCraftpixPixel.otf")
         self.custom_font = "TinyFontCraftpixPixel"
@@ -188,8 +186,12 @@ class PauseView(arcade.View):
 
     def on_draw(self):
         self.clear()
-        width = self.window.width
-        height = self.window.height
-        arcade.draw_texture_rect(self.background_texture, arcade.rect.XYWH(
-            width // 2, height // 2, width, height))
+        self.game_view.on_draw()
+        arcade.draw_lrbt_rectangle_filled(
+            left=0,
+            right=self.window.width,
+            top=self.window.height,
+            bottom=0,
+            color=(0, 0, 0, 180)
+        )
         self.manager.draw()
