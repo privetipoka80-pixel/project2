@@ -52,17 +52,6 @@ class MenuView(arcade.View):
         start_game_button.on_click = self.start_game
         self.box_layout.add(start_game_button)
 
-        records_button = UITextureButton(text='Records',
-                                         texture=texture_normal,
-                                         texture_hovered=texture_hovered,
-                                         texture_pressed=texture_pressed,
-                                         scale=2.0,
-                                         font_name=self.custom_font,
-                                         style=self.style
-                                         )
-        records_button.on_click = self.records_click
-        self.box_layout.add(records_button)
-
         # если нажать заработает метод exit_click
         exit = UITextureButton(text='Exit',
                                texture=texture_normal,
